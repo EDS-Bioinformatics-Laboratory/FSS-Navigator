@@ -10,7 +10,7 @@ This Python script should become part of CORE to navigate the File System Struct
 
 
 
-**Date:** 8 May 2023
+**Date:** 9 May 2023
 
 **Your Name:** Prof. dr. Antoine van Kampen
 
@@ -21,6 +21,24 @@ This Python script should become part of CORE to navigate the File System Struct
 **Software environment:** Python 3 / Anaconda
 
 
+
+
+
+------
+
+**FILES**
+
+------
+
+* ParseDirectory_v1.py   (can be renamed to Navigate.py for the default FSS template)
+* Input:
+  * 0_PROJECT.md  (generation description of project)
+  * 0_GETTINGSTARTED.html  (introducing a new researcher to the project)
+  * Navigation.conf  (configuration file)
+* Output:
+  * Navigation.html (open in web-browser to navigate the project)
+
+------
 
 
 
@@ -56,22 +74,9 @@ In this configuration file you can specify which files and subdirectories to inc
 
 ------
 
-**WARNING** 
+**PYTHON PROGRAM**
 
 ------
-
-* If the structure of the FSS changes in the future then it may be necessary to update the paths in the Python program.
-* The Python program assumes a strict naming of the pre-defined files in the FSS according as outlined in the usage rules of the FSS.
-
-
-
-------
-
-**PYTHON PROGRAMS**
-
-------
-
-
 
 \20230508_ParseDirectory\Processing\20230508_ParseDirectory\Code\\**ParseDirectory_v1.py**
 
@@ -89,6 +94,10 @@ The files required to navigate the FSS are also written to the **\.navigate** di
 
 
 
+There should be a **0_GETTINGSTARTED.html**, which is used to introduce new researchers to the project and its structure. E.g., indicating the main data files, main processing scripts, and main results. This file can be made in any editor and then converted to an html file.
+
+
+
 **Note**: this script is used for development and testing
 
 
@@ -103,24 +112,36 @@ For the final Python script that can be used with a real FSS template several ch
 
   * ```
     # Specify location of FSS
-    FSSpath = "F:\\Cloud\\Dropbox\\BioLab\\FSS Projects\\20230508_ParseDirectory\\"
+    FSSpath = "F:\\Cloud\\Dropbox\\BioLab\\FSS Projects\\20210617_TNF_Modelling\\"
     
     # Location of .navigate directory
-    navDir  = "Processing\\20230508_ParseDirectory\\Results\\.navigate\\"
+    navDir  = ".navigate\\"   # in root of FSS
     
     # Location of output HTML file (Navigate.html)
-    navigateDir = "Processing\\20230508_ParseDirectory\\Results\\"
+    navigateDir = ""          # root of FSS
     
     # Location of configuration file
-    confDir = "Processing\\20230508_ParseDirectory\\Code\\"
+    confDir = ""             # root of FSS
     ```
 * **FSSpath** (location of the FSS) should become a command line argument to the compiled program instead of being specified in the Python file itself.
 * The directory **\.navigate** with its included template **navigate-template.html** should be moved to the root of the FSS
 * The configuration file **Navigation.conf** should be moved to the root of the FSS.
+* There should be a **0_GETTINGSTARTED.html** in the root of the FSS
 
 ------
 
 
+
+
+
+------
+
+**WARNINGS** 
+
+------
+
+* If the structure of the FSS changes in the future then it may be necessary to update the paths in the Python program.
+* The Python program assumes a strict naming of the pre-defined files in the FSS according as outlined in the usage rules of the FSS.
 
 
 
@@ -130,7 +151,7 @@ For the final Python script that can be used with a real FSS template several ch
 
 ------
 
-
-
 * Directories starting with a dot (e.g., .git) are not recognized as a directory.  Not really a problem but needs to be solved. 
 * The construct 'item in' searches for substrings. Therefore, if you have a file test.abc and in the configuration file you specify filesInclude = xtest.abc, then test.abc is also included in the tree.
+* If the markdown file contains images then the conversion to html does not yet work correctly (i.e., the html doesn't contain the images)
+* Links in the 0_PROJECT.md file do not work once this file is embed as an html file in Navigate.html. 
