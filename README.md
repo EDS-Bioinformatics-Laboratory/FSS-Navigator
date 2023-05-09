@@ -155,3 +155,4 @@ For the final Python script that can be used with a real FSS template several ch
 * The construct 'item in' searches for substrings. Therefore, if you have a file test.abc and in the configuration file you specify filesInclude = xtest.abc, then test.abc is also included in the tree.
 * If the markdown file contains images then the conversion to html does not yet work correctly (i.e., the html doesn't contain the images)
 * Links in the 0_PROJECT.md file do not work once this file is embed as an html file in Navigate.html. 
+* The parsing of 0_PROJECT.md may go wrong if the title is not formatted in a specific way. This should be made more general.
