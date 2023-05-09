@@ -48,7 +48,9 @@ To test the Python program:
 
 ------
 
-In the Python program \\**ParseDirectory_v1.py** you can currently specify which files and subdirectories to include/exclude. 
+The output of the Python program can be configured by changing the settings in \20230508_ParseDirectory\Processing\20230508_ParseDirectory\Code\\**Navigation.conf**.
+
+In this configuration file you can specify which files and subdirectories to include/exclude. 
 
 
 
@@ -57,8 +59,6 @@ In the Python program \\**ParseDirectory_v1.py** you can currently specify which
 **WARNING** 
 
 ------
-
-
 
 * If the structure of the FSS changes in the future then it may be necessary to update the paths in the Python program.
 * The Python program assumes a strict naming of the pre-defined files in the FSS according as outlined in the usage rules of the FSS.
@@ -95,14 +95,42 @@ The files required to navigate the FSS are also written to the **\.navigate** di
 
 ------
 
-For the final Python script that can be used with the current FSS template two changes need to be made:
+For the final Python script that can be used with a real FSS template several changes need to be made:
 
-* The paths in the Python program should be changed
-* The FSSPath should become a command line argument to the compiled program instead of being specified in the Python file itself.
-* The configuration options should also be moved out of the Python program itself
-* The directory **\.navigate** should be moved to the root of the FSS
+* The Python program needs to be **compiled** and placed in the root of the FSS
+
+* The **paths** in the Python program should be changed. These are all located at the beginning of the program:
+
+  * ```
+    # Specify location of FSS
+    FSSpath = "F:\\Cloud\\Dropbox\\BioLab\\FSS Projects\\20230508_ParseDirectory\\"
+    
+    # Location of .navigate directory
+    navDir  = "Processing\\20230508_ParseDirectory\\Results\\.navigate\\"
+    
+    # Location of output HTML file (Navigate.html)
+    navigateDir = "Processing\\20230508_ParseDirectory\\Results\\"
+    
+    # Location of configuration file
+    confDir = "Processing\\20230508_ParseDirectory\\Code\\"
+    ```
+* **FSSpath** (location of the FSS) should become a command line argument to the compiled program instead of being specified in the Python file itself.
+* The directory **\.navigate** with its included template **navigate-template.html** should be moved to the root of the FSS
+* The configuration file **Navigation.conf** should be moved to the root of the FSS.
 
 ------
 
 
 
+
+
+------
+
+**BUGS** 
+
+------
+
+
+
+* Directories starting with a dot (e.g., .git) are not recognized as a directory.  Not really a problem but needs to be solved. 
+* The construct 'item in' searches for substrings. Therefore, if you have a file test.abc and in the configuration file you specify filesInclude = xtest.abc, then test.abc is also included in the tree.
