@@ -20,17 +20,22 @@ from datetime import date
 
 
 # Specify location of FSS
-# FSSpath = "C:\\_data\\Dropbox\\BioLab\\FSS Projects\\20230508_ParseDirectory\\"
-FSSpath = "F:\\Cloud\\Dropbox\\BioLab\\FSS Projects\\20230508_ParseDirectory\\"
+# Note: the "\\..\\..\\.." is only for testing this script and should be removed
+# when moved to the root of the FSS
+FSSpath = os.path.join(os.getcwd(), '..', '..', '..') #"\\..\\..\\.."
+#FSSpath = "F:\\Cloud\\Dropbox\\BioLab\\FSS Projects\\20230508_ParseDirectory\\"
 
 # Location of .navigate directory
-navDir  = "Processing\\20230508_ParseDirectory\\Results\\.navigate\\"
+navDir  = os.path.join("Processing","20230508_ParseDirectory","Results",".navigate")
+#navDir = "\\Processing\\20230508_ParseDirectory\\Results\\.navigate\\"
 
 # Location of output HTML file (Navigate.html)
-navigateDir = "Processing\\20230508_ParseDirectory\\Results\\"
+navigateDir  = os.path.join("Processing","20230508_ParseDirectory","Results")
+#navigateDir = "\\Processing\\20230508_ParseDirectory\\Results\\"
 
 # Location of configuration file
-confDir = "Processing\\20230508_ParseDirectory\\Code\\"
+confDir  = os.path.join("Processing","20230508_ParseDirectory","Code")
+#confDir = "\\Processing\\20230508_ParseDirectory\\Code\\"
 
 
 #
@@ -99,9 +104,13 @@ def create_directory_structure(fsspath, showall,
     # files are shown in 'frame-2'  (upper right corner).
     for item in files:
         item_path = os.path.join(fsspath, item)
-        content += f"<li><a href=\"{escape(item_path)}\" target=\"frame-2\">{escape(item)}</a></li>"
+        if (item.endswith((".png",".jpg",".jpeg",".svg",".gif"))) :
+            content += f"<li><a target=\"_blank\" href=\"{escape(item_path)}\" target=\"frame-2\">{escape(item)}</a></li>"
+        else:
+            content += f"<li><a href=\"{escape(item_path)}\" target=\"frame-2\">{escape(item)}</a></li>"
 
     return content
+
 
 #
 # Function to parse the 0_PROJECT.md file and convert to HTML. This file contains the general project information
@@ -116,7 +125,7 @@ def create_directory_structure(fsspath, showall,
 # project navigation window
 #
 def parse_project(fsspath, filename):
-    with open(fsspath + filename, "r") as f:
+    with open(os.path.join(fsspath, filename), "r") as f:
         markdown_text = f.read()                # read complete markdown file
     project = markdown.markdown(markdown_text)  # convert to html
     return project
@@ -133,7 +142,7 @@ def parse_project(fsspath, filename):
 # navdir:  Location of .navigate directory
 #
 def save_project(fsspath, project, line, title, navdir):
-    with open(fsspath + navdir + "0_project.html", "w") as f:
+    with open(os.path.join(fsspath, navdir, "0_project.html"), "w") as f:
         f.write(line)
         f.write(title)
         f.write(line)
@@ -155,10 +164,10 @@ def save_project(fsspath, project, line, title, navdir):
 # navdir:  Location of .navigate directory
 #
 def save_getting_started(fsspath, line, title, navdir, filename="0_GETTINGSTARTED.html"):
-    with open(fsspath + filename, "r") as f:
+    with open(os.path.join(fsspath, filename), "r") as f:
         start = f.read()   # read html file
     # Format and save
-    with open(fsspath + navdir + "0_gettingstarted.html", "w") as f:
+    with open(os.path.join(fsspath, navdir, "0_gettingstarted.html"), "w") as f:
         f.write(line)
         f.write(title)
         f.write(line)
@@ -183,7 +192,7 @@ def save_getting_started(fsspath, line, title, navdir, filename="0_GETTINGSTARTE
 #
 def parse_repo(fsspath, filename="github.txt"):
     repo = "No GitHub repository found"  # default response if repository is not specified or cannot be found
-    f = open(fsspath + "Processing\\" + filename, "r")
+    f = open(os.path.join(fsspath, "Processing", filename), "r")
     myline = f.readline()
     while myline:
         myline = myline.rstrip()  # remove trailing spaces
@@ -206,7 +215,7 @@ def parse_repo(fsspath, filename="github.txt"):
 #
 def read_config(confdir, fsspath, filename="Navigation.conf"):
     config = configparser.ConfigParser()
-    config.read(fsspath + confdir + filename)
+    config.read(os.path.join(fsspath, confdir, filename))
     return config
 ## End of function read_config
 
@@ -233,7 +242,8 @@ def s2t(string):
 # navdir:              location of .navigate directory
 # navigatedir:         location of output file (Navigate.html)
 #
-def write_navigation(fsspath, repo, project, gettingstarted, directory_structure,
+def write_navigation(fsspath, repo, project, projecttitle,
+                     gettingstarted, directory_structure,
                      navdir, navigatedir):
     fss = f"<ul>{directory_structure}</ul>"
 
@@ -246,7 +256,7 @@ def write_navigation(fsspath, repo, project, gettingstarted, directory_structure
     line      = "<hr class='rounded'>"
 
     # text elements
-    pagetitle    = "Project:"
+    pagetitle    = "Project: "
     information  = "Project information"
     browser      = "Project browser"
     starting     = "Getting started"
@@ -256,13 +266,14 @@ def write_navigation(fsspath, repo, project, gettingstarted, directory_structure
     Instruction2 = 'Note: only relevant files are shown in this browser'
 
     # Parse the project name out of 0_PROJECT.md
-    # Since it was converted from markdown to html, I remove the html tags using re.search
-    projectname = project.split('\n', 1)[0]
-    projectname = re.search('</strong>(.*)</p>', projectname)
-    projectname = projectname.group(1)
+    # Since it was converted from markdown to html, I remove the html tags
+    # using re.search (regular expressions).
+    #projectname = project.split('\n', 1)[0]                     # get the first line
+    #projectname = re.search('</strong>(.*)</p>', projectname)
+    #projectname = projectname.group(1)
 
     # format text elements
-    pagetitle   = "<p style=\"color:red;font-size:25px;\"> <strong>" + pagetitle + projectname + "</strong> </p>"
+    pagetitle   = "<p style=\"color:red;font-size:25px;\"> <strong>" + pagetitle + projecttitle + "</strong> </p>"
     information = "<p style=\"color:blue;font-size:20px;\"><strong>" + information + "</strong></p>"
     starting    = "<p style=\"color:blue;font-size:20px;\"><strong>" + starting + "</strong></p>"
     browser     = "<p style=\"color:blue;font-size:20px;\"><strong>" + browser + "</strong></p>"
@@ -272,13 +283,13 @@ def write_navigation(fsspath, repo, project, gettingstarted, directory_structure
 
     # Copy navigation template
     # The navigation template defines four iframes in which all content will be displayed
-    src = fsspath + navdir + "navigate-template.html"
-    dst = fsspath + navigatedir + "Navigate.html"
+    src = os.path.join(fsspath, navdir, "navigate-template.html")
+    dst = os.path.join(fsspath, navigatedir, "Navigate.html")
     shutil.copy(src, dst)
 
     # Copy 0_GETTINGSTARTED.pdf
-    src = fsspath + "0_GETTINGSTARTED.html"
-    dst = fsspath + navdir + "0_gettingstarted.html"
+    src = os.path.join(fsspath, "0_GETTINGSTARTED.html")
+    dst = os.path.join(fsspath, navdir, "0_gettingstarted.html")
     shutil.copy(src, dst)
 
     # Format and save Project (0_PROJECT.md) as html file
@@ -290,7 +301,7 @@ def write_navigation(fsspath, repo, project, gettingstarted, directory_structure
     #
     # Write html page and save to file
     #
-    with open(fsspath + navdir + "fss.html", "w") as f:
+    with open(os.path.join(fsspath, navdir, "fss.html"), "w") as f:
         f.write(startHTML)     # html stuff
         f.write(style)         # html stuff
         f.write(line)          # html line
@@ -313,14 +324,11 @@ def write_navigation(fsspath, repo, project, gettingstarted, directory_structure
 # CONFIGURATION
 #
 
-# Specify file that holds general project information and getting started
-#ProjectFile        = "0_PROJECT.md"
-#GettingStartedFile = "0_GETTINGSTARTED.html"
-
 # Read and parse configuration file
 config = read_config(confDir, fsspath=FSSpath, filename="Navigation.conf")
 
-FSSpath            = config['PATHS']['FSSpath']
+projectTitle       = config['GENERAL']['ProjectTitle']
+
 showAll            = int(config['CONTENT']['ShowAll'])
 
 ProjectFile        = config['FILE.CONTENT']['ProjectFile']
@@ -335,29 +343,6 @@ filesExclude       = s2t(config['FILES.INCLUDE.EXCLUDE']['filesExclude'])
 filesInclude       = s2t(config['FILES.INCLUDE.EXCLUDE']['filesInclude'])
 
 directoryExclude   = s2t(config['DIR.INCLUDE.EXCLUDE']['directoryExclude'])
-
-#
-# Define subdirectories, filetypes, and files to include/exclude in the project overview
-#
-
-# Help files
-#filesHelp = ("HELP.md", "HELP_FileNameConventions.md", "HELP_FileSystemStructure.md")
-
-# File types to show in tree
-#fileTypes = (".py", ".ipynb", ".R", ".md", ".txt", ".pdf", ".docx")
-
-# File types to exclude
-#fileTypesExclude = ("-template.txt")
-
-# Specific files not to show
-#filesExclude = ("ACKNOWLEDGEMENTS.md", "CITATION.md", "VERSION-HISTORY.md",
-#                "Step-by-Step-ENCORE-Guide_v11.docx", ".gitignore", "github.txt")
-
-# Specific files to always include
-#filesInclude = ("test.abc")
-
-# Specific directories not to show
-#directoryExclude = ("Sharing", "0_SoftwareEnvironment", ".navigate", ".git")
 
 
 #
@@ -383,6 +368,8 @@ directory_structure = create_directory_structure(fsspath=FSSpath,
                                                  filetypesexclude=fileTypesExclude,
                                                  direxclude=directoryExclude)
 
-write_navigation(FSSpath, Repo, Project, GettingStartedFile, directory_structure, navDir, navigateDir)
+write_navigation(FSSpath, Repo, Project, projectTitle,
+                 GettingStartedFile, directory_structure,
+                 navDir, navigateDir)
 
 #%%

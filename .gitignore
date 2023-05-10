@@ -98,7 +98,7 @@ Thumpbs.db
 # Exclude directories
 ##
 Data/*
-**/Results/*
+#**/Results/*
 **/bin/*
 
 
