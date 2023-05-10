@@ -1,6 +1,6 @@
 #
 # Program: show the project structure in a html file to allow easy navigation
-# Authors: Antoine van Kampen, Aldo Jongejan
+# Authors: Antoine van Kampen, Aldo Jongejan, Utkarsh Mahamune
 # Date: 9 May 2023
 #
 # This software is to be used as part of CORE, the approach to improve the reproducibility of computational
@@ -27,15 +27,15 @@ FSSpath = os.path.join(os.getcwd(), '..', '..', '..') #"\\..\\..\\.."
 
 # Location of .navigate directory
 navDir  = os.path.join("Processing","20230508_ParseDirectory","Results",".navigate")
-#navDir = "\\Processing\\20230508_ParseDirectory\\Results\\.navigate\\"
+#navDir  = ".navigate"
 
 # Location of output HTML file (Navigate.html)
 navigateDir  = os.path.join("Processing","20230508_ParseDirectory","Results")
-#navigateDir = "\\Processing\\20230508_ParseDirectory\\Results\\"
+#navigateDir  = ""
 
 # Location of configuration file
 confDir  = os.path.join("Processing","20230508_ParseDirectory","Code")
-#confDir = "\\Processing\\20230508_ParseDirectory\\Code\\"
+#confDir  = ""
 
 
 #
@@ -133,7 +133,7 @@ def parse_project(fsspath, filename):
     # of the FSS. Therefore, all paths presents in this file should be changed to
     # be relative to the root again
     project = project.replace('href=\".', 'href=\".\..')
-    #project = project.replace('Parse','xxxxxxxxx')
+    project = project.replace('src=\".', 'src=\".\..')
 
     return project
 ## End of function part_project

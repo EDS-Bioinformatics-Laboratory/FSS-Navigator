@@ -126,7 +126,7 @@ For the final Python script that can be used with a real FSS template several ch
     FSSpath = FSSpath = os.getcwd()
     
     # Location of .navigate directory
-    navDir  = ".navigate\\"   # in root of FSS
+    navDir  = ".navigate"   # in root of FSS
     
     # Location of output HTML file (Navigate.html)
     navigateDir = ""          # root of FSS
