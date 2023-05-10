@@ -128,6 +128,13 @@ def parse_project(fsspath, filename):
     with open(os.path.join(fsspath, filename), "r") as f:
         markdown_text = f.read()                # read complete markdown file
     project = markdown.markdown(markdown_text)  # convert to html
+
+    # The resulting html file (project) will be saved in .navigate in the root
+    # of the FSS. Therefore, all paths presents in this file should be changed to
+    # be relative to the root again
+    project = project.replace('href=\".', 'href=\".\..')
+    #project = project.replace('Parse','xxxxxxxxx')
+
     return project
 ## End of function part_project
 

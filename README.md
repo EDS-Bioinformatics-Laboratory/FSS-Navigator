@@ -16,6 +16,8 @@ This Python script should become part of CORE to navigate the File System Struct
 
 **Operating System(s) / version(s) used during development: ** Windows 11
 
+**Tested:** on Mac and Windows 
+
 **Specific hardware requirements:** None
 
 **Software environment:** Python 3 / Anaconda
