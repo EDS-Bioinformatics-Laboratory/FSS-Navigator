@@ -23,7 +23,8 @@ from datetime import date
 # Note: the "\\..\\..\\.." is only for testing this script and should be removed
 # when moved to the root of the FSS
 FSSpath = os.path.join(os.getcwd(), '..', '..', '..') #"\\..\\..\\.."
-#FSSpath = "F:\\Cloud\\Dropbox\\BioLab\\FSS Projects\\20230508_ParseDirectory\\"
+#FSSpath = "."
+
 
 # Location of .navigate directory
 navDir  = os.path.join("Processing","20230508_ParseDirectory","Results",".navigate")
@@ -105,9 +106,9 @@ def create_directory_structure(fsspath, showall,
     for item in files:
         item_path = os.path.join(fsspath, item)
         if (item.endswith((".png",".jpg",".jpeg",".svg",".gif"))) :
-            content += f"<li><a target=\"_blank\" href=\"{escape(item_path)}\" target=\"frame-2\">{escape(item)}</a></li>"
+            content += f"<li><a target=\"_blank\" href=\".\.{escape(item_path)}\">{escape(item)}</a></li>"
         else:
-            content += f"<li><a href=\"{escape(item_path)}\" target=\"frame-2\">{escape(item)}</a></li>"
+            content += f"<li><a href=\".\.{escape(item_path)}\" target=\"frame-2\">{escape(item)}</a></li>"
 
     return content
 
@@ -132,8 +133,8 @@ def parse_project(fsspath, filename):
     # The resulting html file (project) will be saved in .navigate in the root
     # of the FSS. Therefore, all paths presents in this file should be changed to
     # be relative to the root again
-    project = project.replace('href=\".', 'href=\".\..')
-    project = project.replace('src=\".', 'src=\".\..')
+    project = project.replace('href=\".', 'target = "frame-2" href=\".\..')
+    project = project.replace('src=\".', 'target = "frame-2" src=\".\..')
 
     return project
 ## End of function part_project
@@ -173,7 +174,15 @@ def save_project(fsspath, project, line, title, navdir):
 def save_getting_started(fsspath, line, title, navdir, filename="0_GETTINGSTARTED.html"):
     with open(os.path.join(fsspath, filename), "r") as f:
         start = f.read()   # read html file
+
     # Format and save
+    #
+    # The resulting html file (start) will be saved in .navigate in the root
+    # of the FSS. Therefore, all paths presents in this file should be changed to
+    # be relative to the root again
+    start = start.replace('href=\"', 'target=\"frame-2\" href=\".\..\\')
+    start = start.replace('src=\"',  'target=\"frame-2\" src=\".\..\\')
+    start = start.replace('img=\"',  'target=\"frame-2\" img=\".\..\\')
     with open(os.path.join(fsspath, navdir, "0_gettingstarted.html"), "w") as f:
         f.write(line)
         f.write(title)
