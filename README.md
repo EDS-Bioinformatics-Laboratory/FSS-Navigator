@@ -34,13 +34,13 @@ This Python script should become part of CORE to navigate the File System Struct
 
 * **ParseDirectory_v1.py**   (can be renamed to Navigate.py for the default FSS template)
 * Input:
-  * **0_PROJECT.md**  (generation description of project)
-  * **0_GETTINGSTARTED.html**  (introducing a new researcher to the project)
-  * **Navigation.conf**  (configuration file)
-  * **navigate-template.html** (template that will be copied to Navigation.html)
+  * **0_PROJECT.md**  (generation description of project). This file should be in the root of the FSS.
+  * **0_GETTINGSTARTED.html**  (introducing a new researcher to the project). This file should be in the root of the FSS.
+  * **Navigation.conf**  (configuration file). This file should be in the root of the FSS.
+  * **navigate-template.html** (template that will be copied to Navigation.html). This file should be present in the directory .navigate
 * Output:
-  * **Navigation.html** (open in web-browser to navigate the project)
-* **\.navigate** (directory containing information to be shown in Navigation.html)
+  * **Navigation.html** (open in web-browser to navigate the project). This file will be written in the root of the FSS.
+* **\.navigate** (directory containing information to be shown in Navigation.html). This directory should be located in the root of the FSS
 
 ------
 
