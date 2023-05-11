@@ -2,7 +2,7 @@
 
 
 
-This directory contains the output of \20230508_ParseDirectory\Processing\20230508_ParseDirectory\Code\\**ParseDirectory_v1.py**. 
+This directory contains the output of \20230508_ParseDirectory\Processing\20230508_ParseDirectory\Code\\**Navigate.py**. 
 
 
 
@@ -14,6 +14,7 @@ This directory contains the output of \20230508_ParseDirectory\Processing\202305
 Note:
 
 * **ProjectDocumentation** is only in Results to test the Python program. That is, to determine if the links in 0_PROJECT.md work correctly.
+* Figures (png files are only included for testing purposes)
 
 
 
