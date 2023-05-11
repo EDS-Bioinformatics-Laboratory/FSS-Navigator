@@ -16,7 +16,7 @@ This Python script is part of **ENCORE** (Enhancing Computational Research) to n
 
 **Developed by:** Prof. dr. Antoine van Kampen, Aldo Jongejan, Utkarsh Mahamune (www.bioinformaticslaboratory.eu)
 
-**Operating System(s) / version(s) used during development: ** Windows 11
+**Operating System(s) / version(s) used during development:** Windows 11
 
 **Tested:** on Mac and Windows
 
