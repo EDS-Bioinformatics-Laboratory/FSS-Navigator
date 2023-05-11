@@ -32,7 +32,7 @@ This Python script should become part of CORE to navigate the File System Struct
 
 ------
 
-* **ParseDirectory_v1.py**   (can be renamed to Navigate.py for the default FSS template)
+* **Navigate.py**   
 * Input:
   * **0_PROJECT.md**  (generation description of project). This file should be in the root of the FSS.
   * **0_GETTINGSTARTED.html**  (introducing a new researcher to the project). This file should be in the root of the FSS.
@@ -89,7 +89,7 @@ Note: the project title is also in 0_PROJECT.md. However, since there is no stan
 
 ------
 
-\20230508_ParseDirectory\Processing\20230508_ParseDirectory\Code\\**ParseDirectory_v1.py**
+\20230508_ParseDirectory\Processing\20230508_ParseDirectory\Code\\**Navigate.py**
 
 This Python program parses a complete File System Structure (FSS) starting from its root. 
 

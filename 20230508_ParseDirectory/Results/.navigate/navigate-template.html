@@ -2,6 +2,8 @@
 
 <html>
 <head>
+  <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+
   <style type="text/css">
 		div {
 		  display: flex;
@@ -23,10 +25,11 @@
 			margin-bottom: 20px;
 			border: 2px solid green;
 		}
-		
 
-		  
-
+		md-block { 
+			white-space: pre; 
+			font-family: monospace; 
+		}
   </style>
 </head>
 
@@ -39,6 +42,8 @@
   </div>
   <div class="box">
      <iframe src="./.navigate/0_gettingstarted.html" name="frame-2">
+	 <md-block>
+	 </md-block>
     </iframe>
   </div>
 </div>
@@ -53,6 +58,6 @@
     </iframe>
   </div>
 </div>
-
+</md-block>
 </body>
 </html>

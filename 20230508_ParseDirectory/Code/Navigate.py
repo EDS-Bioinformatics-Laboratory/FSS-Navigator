@@ -1,5 +1,6 @@
 #
-# Program: show the project structure in a html file to allow easy navigation
+# Program:  Navigate.py
+# Function: show the project structure in a html file to allow easy navigation
 # Authors: Antoine van Kampen, Aldo Jongejan, Utkarsh Mahamune
 # Date: 9 May 2023
 #
@@ -8,7 +9,9 @@
 #
 # Updates:
 # 9 May 2023: First version
-#
+# 10 May 2023: Solved path problems and other issues with the parsing. Script now uses
+#              path.join in order to work on Mac/Unix/Windows
+# 11 May 2023:
 
 import os
 import markdown
@@ -16,27 +19,26 @@ import re                  # regular expression
 import shutil              # copying files
 import configparser        # to read/parse configuration file
 from html import escape
-from datetime import date
+import datetime
 
 
 # Specify location of FSS
 # Note: the "\\..\\..\\.." is only for testing this script and should be removed
 # when moved to the root of the FSS
-FSSpath = os.path.join(os.getcwd(), '..', '..', '..') #"\\..\\..\\.."
-#FSSpath = "."
-
+FSSpath = os.path.join(os.getcwd(), '..', '..', '..')
+#FSSpath = "."  # Use this path when using with a FSS
 
 # Location of .navigate directory
 navDir  = os.path.join("Processing","20230508_ParseDirectory","Results",".navigate")
-#navDir  = ".navigate"
+#navDir  = ".navigate" # Use this path when using with a FSS
 
 # Location of output HTML file (Navigate.html)
 navigateDir  = os.path.join("Processing","20230508_ParseDirectory","Results")
-#navigateDir  = ""
+#navigateDir  = "" # Use this path when using with a FSS
 
 # Location of configuration file
 confDir  = os.path.join("Processing","20230508_ParseDirectory","Code")
-#confDir  = ""
+#confDir  = "" # Use this path when using with a FSS
 
 
 #
@@ -67,7 +69,7 @@ def create_directory_structure(fsspath, showall,
     directories = []
     files = []
 
-    if showall != 1: showall=0
+    if showall != 1: showall=0 # Show complete directory structure (1) or not (<>1)
 
     # Get all subdirectories and files (using the includes and excludes)
     for item in os.listdir(fsspath):
@@ -92,11 +94,11 @@ def create_directory_structure(fsspath, showall,
     content = ""
     for item in directories:
         item_path = os.path.join(fsspath, item)
-        content += f"<details><summary><strong>{escape(item)}</strong></summary></li>"
-        content += "<ul>"
-        content += create_directory_structure(item_path, showall, filetypes,
-                                              filesexclude, filesinclude,
-                                              filetypesexclude, direxclude, fileshelp)
+        content  += f"<details><summary><strong>{escape(item)}</strong></summary></li>"
+        content  += "<ul>"
+        content  += create_directory_structure(item_path, showall, filetypes,
+                                               filesexclude, filesinclude,
+                                               filetypesexclude, direxclude, fileshelp)
         content += "</ul>"
         content += "</details>"
 
@@ -106,10 +108,10 @@ def create_directory_structure(fsspath, showall,
     for item in files:
         item_path = os.path.join(fsspath, item)
         if (item.endswith((".png",".jpg",".jpeg",".svg",".gif"))) :
-            content += f"<li><a target=\"_blank\" href=\".\.{escape(item_path)}\">{escape(item)}</a></li>"
+            content += f"<li><a target=\"_blank\" href=\"{escape(item_path)}\">{escape(item)}</a></li>"
+            #content += f"<a href=\"javascript:window.open('{item_path}', 'newwindow', 'width=300,height=250')\">{escape(item)}</a>"
         else:
-            content += f"<li><a href=\".\.{escape(item_path)}\" target=\"frame-2\">{escape(item)}</a></li>"
-
+            content += f"<li><a href=\"{escape(item_path)}\" target=\"frame-2\">{escape(item)}</a></li>"
     return content
 
 
@@ -263,12 +265,21 @@ def write_navigation(fsspath, repo, project, projecttitle,
                      navdir, navigatedir):
     fss = f"<ul>{directory_structure}</ul>"
 
-    today = date.today()  # Get date and time
+    today = datetime.datetime.now() #Get date and time
 
     # html stuff
-    startHTML = "<html><body>"
-    endHTML   = "</body></html>"
-    style     = "<style>hr.rounded {border-top: 4px solid #bbb; border-radius: 5px;} </style>"  # rounded border
+    startHTML  = "<html>"
+    startHEAD  = "<head>"
+    htmltitle  = "Navigation for the standardized file structure (FSS)"
+    #htmlscript = "<script type=\"module\" src=\"https://md-block.verou.me/md-block.js\"></script>"
+    startSTYLE = "<style>"
+    linestyle  = "hr.rounded {border-top: 4px solid #bbb; border-radius: 5px;}"  # rounded border
+    endSTYLE   = "</style>"
+    endHEAD    = "</head>"
+    startBODY  = "<body>"
+    endBODY    = "</body>"
+    endHTML    = "</html>"
+
     line      = "<hr class='rounded'>"
 
     # text elements
@@ -280,6 +291,7 @@ def write_navigation(fsspath, repo, project, projecttitle,
     repo         = "Github repository: " + repo
     Instruction1 = 'Click triangle to unfold directory. Click on file to show contents.'
     Instruction2 = 'Note: only relevant files are shown in this browser'
+    Instruction3 = 'Click here to reset the project browser'
 
     # Parse the project name out of 0_PROJECT.md
     # Since it was converted from markdown to html, I remove the html tags
@@ -289,13 +301,13 @@ def write_navigation(fsspath, repo, project, projecttitle,
     #projectname = projectname.group(1)
 
     # format text elements
-    pagetitle   = "<p style=\"color:red;font-size:25px;\"> <strong>" + pagetitle + projecttitle + "</strong> </p>"
-    information = "<p style=\"color:blue;font-size:20px;\"><strong>" + information + "</strong></p>"
-    starting    = "<p style=\"color:blue;font-size:20px;\"><strong>" + starting + "</strong></p>"
-    browser     = "<p style=\"color:blue;font-size:20px;\"><strong>" + browser + "</strong></p>"
-    DateTime    = "Generated on: " + today.strftime("%B %d, %Y")  # Textual month, day and year
-    repo        = "<p style=\"color:black;font-size:16px;\">" + repo + "</p>"
-
+    pagetitle    = "<p style=\"color:red;font-size:25px;\"> <strong>" + pagetitle + projecttitle + "</strong> </p>"
+    information  = "<p style=\"color:blue;font-size:20px;\"><strong>" + information + "</strong></p>"
+    starting     = "<p style=\"color:blue;font-size:20px;\"><strong>" + starting + "</strong></p>"
+    browser      = "<p style=\"color:blue;font-size:20px;\"><strong>" + browser + "</strong></p>"
+    DateTime     = "Generated on: " + today.strftime("%B %d, %Y (%H:%M:%S)")  # Textual month, day and year
+    repo         = "<p style=\"color:black;font-size:16px;\">" + repo + "</p>"
+    Instruction3 = "<p><a target=\"_top\" href=\".\\..\\Navigate.html\">" + Instruction3 + "</a></p>"
 
     # Copy navigation template
     # The navigation template defines four iframes in which all content will be displayed
@@ -319,18 +331,30 @@ def write_navigation(fsspath, repo, project, projecttitle,
     #
     with open(os.path.join(fsspath, navdir, "fss.html"), "w") as f:
         f.write(startHTML)     # html stuff
-        f.write(style)         # html stuff
+        f.write(startHEAD)     # html stuff
+        #f.write(htmlscript)    # html stuff
+        #f.write(htmltitle)    # html stuff
+        f.write(startSTYLE)    # html stuff
+        f.write(linestyle)     # html stuff
+        f.write(endSTYLE)      # html stuff
+        f.write(endHEAD)       # html stuff
+        f.write(startBODY)     # html stuff
+
+        #Start the actual content
         f.write(line)          # html line
         f.write(pagetitle)     # Section title: Project Overview
         f.write(DateTime)      # Date of generation
         f.write(line)          # html line
-        f.write(browser)       # Section title: Project browswer
+        f.write(browser)       # Section title: Project browser
         f.write(line)          # html line
         f.write(repo)          # Name of github repository
         f.write(Instruction1)  # Line with instructions
+        f.write(Instruction3)  # Line with instructions
         f.write(fss)           # FSS structure
         f.write(Instruction2)  # Line with instructions
         f.write(line)          # html line
+
+        f.write(endBODY)       # html stuff
         f.write(endHTML)       # html stuff
 
 ## End of function write_navigation
