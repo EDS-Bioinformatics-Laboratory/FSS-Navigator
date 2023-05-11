@@ -108,10 +108,10 @@ def create_directory_structure(fsspath, showall,
     for item in files:
         item_path = os.path.join(fsspath, item)
         if (item.endswith((".png",".jpg",".jpeg",".svg",".gif"))) :
-            content += f"<li><a target=\"_blank\" href=\"{escape(item_path)}\">{escape(item)}</a></li>"
+            content += f"<li><a target=\"_blank\" href=\".\..\{escape(item_path)}\">{escape(item)}</a></li>"
             #content += f"<a href=\"javascript:window.open('{item_path}', 'newwindow', 'width=300,height=250')\">{escape(item)}</a>"
         else:
-            content += f"<li><a href=\"{escape(item_path)}\" target=\"frame-2\">{escape(item)}</a></li>"
+            content += f"<li><a href=\".\..\{escape(item_path)}\" target=\"frame-2\">{escape(item)}</a></li>"
     return content
 
 
