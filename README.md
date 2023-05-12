@@ -6,7 +6,7 @@
 
 Development of Python program that parses the standardized File System Structure (FSS) and writes a html file to easily navigate this directory structure and to inspect the files that are in there.
 
-This Python script is part of **ENCORE** (Enhancing Computational Research) to navigate the File System Structure (FSS)
+This Python script is part of **ENCORE** (Enhancing Computational Research) to navigate the File System Structure (FSS)  
 
 
 
@@ -24,7 +24,7 @@ This Python script is part of **ENCORE** (Enhancing Computational Research) to n
 
 **Specific hardware requirements:** None. Should work on Mac, Windows and *nix.
 
-**Software environment:** Python 3 / Anaconda
+**Software environment:** Python 3 / Anaconda  
 
 
 
