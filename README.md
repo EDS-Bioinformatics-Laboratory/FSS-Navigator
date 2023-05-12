@@ -8,14 +8,14 @@ Development of Python program that parses the standardized File System Structure
 
 This Python script is part of **ENCORE** (Enhancing Computational Research) to navigate the File System Structure (FSS)     
     
-**Date:** 9 May 2023
-**Last update**: 11 May 2023
-**Developed by:** Prof. dr. Antoine van Kampen, Dr. Aldo Jongejan, Utkarsh Mahamune (www.bioinformaticslaboratory.eu)
-**Operating System(s) / version(s) used during development:** Windows 11
-**Language**: Python 3
-**Tested:** on Mac and Windows
-**Specific hardware requirements:** None. Should work on Mac, Windows and *nix.
-**Software environment:** Python 3 / Anaconda    
+**Date:** 9 May 2023  
+**Last update**: 11 May 2023  
+**Developed by:** Prof. dr. Antoine van Kampen, Dr. Aldo Jongejan, Utkarsh Mahamune (www.bioinformaticslaboratory.eu)  
+**Operating System(s) / version(s) used during development:** Windows 11  
+**Language**: Python 3  
+**Tested:** on Mac and Windows  
+**Specific hardware requirements:** None. Should work on Mac, Windows and *nix.  
+**Software environment:** Python 3 / Anaconda      
 
 ------
 
