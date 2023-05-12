@@ -1,4 +1,4 @@
-# Parse Directory
+# Navigate standardized file system structure (FSS) (parse directory)
 
 
 
