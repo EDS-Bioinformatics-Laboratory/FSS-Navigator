@@ -1,10 +1,11 @@
-# Parse Directory
+# Navigate standardized file system structure (FSS) (parse directory)
 
 
 
 **Short project description**
 
 Development of Python program that parses the standardized File System Structure (FSS) and writes a html file to easily navigate this directory structure and to inspect the files that are in there.
+
 
 This Python script is part of **ENCORE** (Enhancing Computational Research) to navigate the File System Structure (FSS)
 
@@ -27,6 +28,19 @@ This Python script is part of **ENCORE** (Enhancing Computational Research) to n
 
 
 
+This Python script is part of **ENCORE** (Enhancing Computational Research) to navigate the File System Structure (FSS)     
+
+>>>>>>> 
+
+
+**Date:** 9 May 2023  
+**Last update**: 11 May 2023  
+**Developed by:** Prof. dr. Antoine van Kampen, Dr. Aldo Jongejan, Utkarsh Mahamune (www.bioinformaticslaboratory.eu)  
+**Operating System(s) / version(s) used during development:** Windows 11  
+**Language**: Python 3  
+**Tested:** on Mac and Windows  
+**Specific hardware requirements:** None. Should work on Mac, Windows and *nix.  
+**Software environment:** Python 3 / Anaconda      
 
 ------
 
@@ -141,7 +155,7 @@ There should be a **0_GETTINGSTARTED.html**. This file can be made in any editor
 
 * If the structure of the FSS changes in the future then it may be necessary to update the paths in the Python program.
 * The Python program assumes a strict naming of the pre-defined files in the FSS according as outlined in the usage rules of the FSS.
-
 * Directories starting with a dot (e.g., .git) are not recognized as a directory.  Not really a problem but needs to be solved. 
 * The construct 'item in' searches for substrings. Therefore, if you have a file test.abc and in the configuration file you specify filesInclude = xtest.abc, then test.abc is also included in the tree.
 * Figures are shown in a separate browswer tab since these are not automatically scaled to the size of the iframe in navigate-template.html
+* To run Navigate.py it requires Python to be installed on your computer. A compiled version will be made available later in order to run the program without a Python installation.
