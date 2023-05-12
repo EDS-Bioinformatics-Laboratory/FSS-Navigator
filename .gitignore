@@ -100,7 +100,7 @@ Thumpbs.db
 Data/*
 #**/Results/*
 **/bin/*
-
+**/Code/_OLD
 
 ##
 # Exclude specific files
