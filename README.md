@@ -14,7 +14,7 @@ This Python script is part of **ENCORE** (Enhancing Computational Research) to n
 
 **Last update**: 11 May 2023
 
-**Developed by:** Prof. dr. Antoine van Kampen, Aldo Jongejan, Utkarsh Mahamune (www.bioinformaticslaboratory.eu)
+**Developed by:** Prof. dr. Antoine van Kampen, Dr. Aldo Jongejan, Utkarsh Mahamune (www.bioinformaticslaboratory.eu)
 
 **Operating System(s) / version(s) used during development:** Windows 11
 
