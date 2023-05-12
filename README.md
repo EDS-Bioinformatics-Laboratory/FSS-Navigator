@@ -9,6 +9,7 @@ Development of Python program that parses the standardized File System Structure
 This Python script is part of **ENCORE** (Enhancing Computational Research) to navigate the File System Structure (FSS)     
    
      
+\
 
 **Date:** 9 May 2023
 
