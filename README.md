@@ -12,7 +12,7 @@ This Python script is part of **ENCORE** (Enhancing Computational Research) to n
 
 **Date:** 9 May 2023
 
-**Last update**: 11 May 2023
+**Last update**: 12 May 2023
 
 **Developed by:** Prof. dr. Antoine van Kampen, Aldo Jongejan, Utkarsh Mahamune (www.bioinformaticslaboratory.eu)
 
@@ -63,23 +63,8 @@ All files mentioned in the previous section are found in https://github.com/EDS-
 
 1. Copy the files and .navigate to the locations indicated in the previous section.
 
-2. Change the directory paths at the top of the Python program to get: 
+2. Enter the title of the projection Navigation.conf and change any of the other settings if necessary.  
 
-```
-# Specify location of FSS
-FSSpath = "."  
-
-# Location of .navigate directory
-navDir  = ".navigate" 
-
-# Location of output HTML file (Navigate.html)
-navigateDir  = "" 
-
-# Location of configuration file
-confDir  = "" 
-```
-
-3. Enter the title of the projection Navigation.conf and change any of the other settings if necessary.  
 4. Run the Python program
 5. Open Navigation.html
 
@@ -119,29 +104,32 @@ In this configuration file you can specify
 
 ------
 
-\20230508_ParseDirectory\Processing\20230508_ParseDirectory\Code\\**Navigate.py**
+The code is located in \20230508_ParseDirectory\Processing\20230508_ParseDirectory\Code\\**Navigate.py**
+
+To test the program, copy **Navigate.py** to the root of the FSS **\20230508_ParseDirectory** and run the Python program. 
+
+
 
 This Python program parses a complete File System Structure (FSS) starting from its root. 
 
-The final navigation file **Navigation.html** that is produced by this script is written to \20230508_ParseDirectory\Processing\20230508_ParseDirectory\Results\Navigation.html
 
-This navigation file is a copy of the **navigation-template.html** in the \20230508_ParseDirectory\Processing\20230508_ParseDirectory\Results\\**.navigate** directory. This template defines four iframes that hold all content of the FSS.
 
-The files required to navigate the FSS are also written to the **\.navigate** directory:
+The final navigation file **Navigation.html** that is produced by this program is written to the root of the FSS. This navigation file is a copy of the **navigation-template.html** in the \20230508\\**.navigate** directory. This template defines four iframes that hold content of the FSS.
 
-* 0_gettingstarted.html (copied from 0_GETTINGSTARTED.html in the root of the FSS)
+
+
+The files required to navigate the FSS are also written to the **\.navigate** directory:le 0_gettingstarted.html (copied from 0_GETTINGSTARTED.html in the root of the FSS)
+
 * 0_project.html (copied from 0_PROJECT.md in the root of the FSS)
 * fss.html the directory structure of the FSS and relevant files
+
+In addition, the .navigate directory will hold html copies of all markdown files (*.md) in the FSS. Markdown files do not render correctly in a html iframe. Therefore, if during parsing a markdown file is encountered it will be converted to html. The html file is copied to .navigate. To prevent that files are overwritten, the filename of the html file contains a randomly generated string. In the browser (Navigation.html) you will still see the filename of the markdown file, but the href link points to the corresponding html file in .navigate. 
+
+All files in the .navigate directory are deleted (except navigate-template) if the Python program is executed.
 
 
 
 There should be a **0_GETTINGSTARTED.html**. This file can be made in any editor (Microsoft Word, LaTex, etc) and then converted to an html file.
-
-
-
-<u>Notes:</u> 
-
-* This script is used for development and testing
 
 
 
@@ -156,5 +144,4 @@ There should be a **0_GETTINGSTARTED.html**. This file can be made in any editor
 
 * Directories starting with a dot (e.g., .git) are not recognized as a directory.  Not really a problem but needs to be solved. 
 * The construct 'item in' searches for substrings. Therefore, if you have a file test.abc and in the configuration file you specify filesInclude = xtest.abc, then test.abc is also included in the tree.
-* Markdown files are not automatically parsed when shown in Navigation.html.
 * Figures are shown in a separate browswer tab since these are not automatically scaled to the size of the iframe in navigate-template.html
