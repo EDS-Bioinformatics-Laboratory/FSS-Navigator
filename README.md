@@ -13,7 +13,7 @@ This Python script is part of **ENCORE** (Enhancing Computational Research) to n
 
 
 **Date:** 9 May 2023  
-**Last update**: 11 May 2023  
+**Last update**: 15 May 2023  
 **Developed by:** Prof. dr. Antoine van Kampen, Dr. Aldo Jongejan, Utkarsh Mahamune (www.bioinformaticslaboratory.eu)  
 **Operating System(s) / version(s) used during development:** Windows 11  
 **Language**: Python 3  
