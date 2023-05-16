@@ -1,8 +1,10 @@
 ###################################################################################################
 # Program:  Navigate.py
-# Function: show the project structure in a html file to allow easy navigation
-# Authors: Antoine van Kampen, Aldo Jongejan, Utkarsh Mahamune
-# Date: 9 May 2023
+# Function: show the standardized File System Structure (FSS) of a project in
+#           a html file to allow easy navigation
+# Authors:  Antoine van Kampen, Aldo Jongejan, Utkarsh Mahamune
+#           Bioinformatics Laboratory, Amsterdam UMC, the Netherlands
+# Date:     9 May 2023
 #
 # This software is to be used as part of ENCORE, the approach to improve the
 # reproducibility of computational projects.
@@ -19,6 +21,12 @@
 #              - No longer requires to define the directory paths as global variables
 #              - Pre-parsed all markdown files to facilitate visualizataion in browser
 #              - Completed docstring documentation
+# 15 May 2023  - All markdown files are now correctly parsed and shown in Navigate.html
+# 16 May 2023  - Changed name of html template
+#              - Navigate.py can now be executed from the command line or imported as a
+#              - module.
+#                   - <path to python>\python.exe Navigate.py --help
+#                   - import Navigate
 #################################################################################################
 
 import os
@@ -145,7 +153,7 @@ def clean_navigate(fsspath, navdir):
         root of the FSS. Preferably, this is a relative path. The default of this path is ".".
     :param str navdir: location of .navigate directory
     """
-    retain = ["navigate-template.html"]  # don't delete these files
+    retain = ["__navigate-template.html__"]  # don't delete these files
 
     # Loop through all files
     for item in os.listdir(os.path.join(fsspath, navdir)):
@@ -439,7 +447,7 @@ def write_navigation(fsspath, repo, project, projecttitle,
 
     # Copy navigation template
     # The navigation template defines four iframes in which all content will be displayed
-    src = os.path.join(fsspath, navdir, "navigate-template.html")
+    src = os.path.join(fsspath, navdir, "__navigate-template.html__")
     dst = os.path.join(fsspath, navigatedir, "Navigate.html")
     shutil.copy(src, dst)
 
@@ -487,9 +495,12 @@ def write_navigation(fsspath, repo, project, projecttitle,
 # END OF FUNCTION write_navigation
 
 
-def create_navigate(fsspath=".", navdir=".navigate", navigatedir="", confdir="", conffile="Navigation.conf"):
+def create_navigate(*, fsspath=".", navdir=".navigate", navigatedir="", confdir="", conffile="Navigation.conf"):
     """
-    Main function to create Navigate.html
+    Main function to create Navigate.html. This html file can be opened in your web-browser to
+    explore all the files in the project (i.e., the standardized File System Structure; FSS). Note
+    that specific files and/or sub-directories may have been excluded from the navigation page. This
+    can be configured in the Configuration file.
     :param str fsspath: Location of standardized fle system structure (FSS). This path should point to the
         root of the FSS. Preferably, this is a relative path. The default of this path is ".".
     :param str navdir: location of .navigate
@@ -497,6 +508,9 @@ def create_navigate(fsspath=".", navdir=".navigate", navigatedir="", confdir="",
     :param str confdir: location of configuration file
     :param str conffile: name of configuration file
     """
+
+    print("Creating Navigate.html.........")
+
     # remove all files (except template) from .navigate
     clean_navigate(fsspath, navdir)
 
@@ -543,6 +557,8 @@ def create_navigate(fsspath=".", navdir=".navigate", navigatedir="", confdir="",
     write_navigation(fsspath, Repo, Project, projectTitle,
                      GettingStartedFile, directory_structure,
                      navdir, navigatedir)
+
+    print("Navigate.html is now available at the specified location")
 # END OF FUNCTION create_navigate
 
 
@@ -550,6 +566,45 @@ def create_navigate(fsspath=".", navdir=".navigate", navigatedir="", confdir="",
 # EXECUTE MAIN FUNCTION TO MAKE NAVIGATION.HTML
 ###############################################
 
-create_navigate()
+# The next construct allows to directly execute the function from the command line or
+# to import it as a module.
 
-#%%
+if __name__ == "__main__":
+    from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+
+    # Parse command line arguments
+    parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
+    parser.add_argument("-f", "--fsspath",     default = ".",               help = "Root of standardized FSS")
+    parser.add_argument("-n", "--navdir",      default = ".navigate",       help = "Location of .navigate")
+    parser.add_argument("-N", "--navigatedir", default = "",                help = "Location of output file (Navigate.html")
+    parser.add_argument("-c", "--confdir",     default = "",                help = "Location of configuration file")
+    parser.add_argument("-C", "--conffile",    default = "Navigation.conf", help = "Name of configuration file")
+
+    # The next three arguments are added to prevent an error when running in JetBrains DataSpell/PyCharm
+    parser.add_argument("--mode", default = 'client',                       help = "Please neglect. Only to enable execution from DataSpell/PyCharm")
+    parser.add_argument("--host", default = '127.0.0.1',                    help = "Please neglect. Only to enable execution from DataSpell/PyCharm")
+    parser.add_argument("--port", default = 52162,                          help = "Please neglect. Only to enable execution from DataSpell/PyCharm")
+
+    args = vars(parser.parse_args())
+
+    #fsspath     = ''.join(args["fsspath"])
+    #navdir      = ''.join(args["navdir"])
+    #navigatedir = ''.join(args["navigatedir"])
+    #confdir     = ''.join(args["confdir"])
+    #conffile    = ''.join(args["conffile"])
+
+    #create_navigate(fsspath     = fsspath,
+    #                navdir      = navdir,
+    #                navigatedir = navigatedir,
+    #                confdir     = confdir,
+    #                conffile    = conffile)
+
+    create_navigate(fsspath     = args["fsspath"],
+                    navdir      = args["navdir"],
+                    navigatedir = args["navigatedir"],
+                    confdir     = args["confdir"],
+                    conffile    = args["conffile"])
+
+
+
+

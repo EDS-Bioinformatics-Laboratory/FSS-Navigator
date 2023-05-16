@@ -1,8 +1,10 @@
 ###################################################################################################
 # Program:  Navigate.py
-# Function: show the project structure in a html file to allow easy navigation
-# Authors: Antoine van Kampen, Aldo Jongejan, Utkarsh Mahamune
-# Date: 9 May 2023
+# Function: show the standardized File System Structure (FSS) of a project in
+#           a html file to allow easy navigation
+# Authors:  Antoine van Kampen, Aldo Jongejan, Utkarsh Mahamune
+#           Bioinformatics Laboratory, Amsterdam UMC, the Netherlands
+# Date:     9 May 2023
 #
 # This software is to be used as part of ENCORE, the approach to improve the
 # reproducibility of computational projects.
@@ -19,6 +21,8 @@
 #              - No longer requires to define the directory paths as global variables
 #              - Pre-parsed all markdown files to facilitate visualizataion in browser
 #              - Completed docstring documentation
+# 15 May 2023  - All markdown files are now correctly parsed and shown in Navigate.html
+#
 #################################################################################################
 
 import os
@@ -29,6 +33,7 @@ from html import escape
 import datetime
 import random
 import string
+import re                  # regular expressions
 
 
 ########################
@@ -288,11 +293,24 @@ def save_getting_started(fsspath, line, title, navdir, filename="0_GETTINGSTARTE
 
     with open(os.path.join(fsspath, filename), "r") as f:
         start = f.read()   # read html file
+
     # Format and save
     #
     # The resulting html file (start) will be saved in .navigate in the root
     # of the FSS. Therefore, all paths presents in this file should be changed to
     # be relative to the root again
+
+    # Get all references to markdown files
+    a = re.findall(r'href=\"(.*\.md)\"', start)
+
+    for item in a:
+        item_backup    = item
+        item           = item.replace('%20', ' ') # otherwise file wil not open in md2thml
+        mdpath, mdfile = os.path.split(item)
+        new_mdpath     = md2html(navdir, item, mdfile) # do the conversion
+        start          = start.replace(item_backup, new_mdpath)
+
+    # Change all paths relative to the root of the FSS
     start = start.replace('href=\"', 'target=\"frame-2\" href=\".\..\\')
     start = start.replace('src=\"',  'target=\"frame-2\" src=\".\..\\')
     start = start.replace('img=\"',  'target=\"frame-2\" img=\".\..\\')
@@ -405,7 +423,7 @@ def write_navigation(fsspath, repo, project, projecttitle,
     repo         = "Github repository: " + repo
     Instruction1 = 'Click triangle to unfold directory. Click on file to show contents.'
     Instruction2 = 'Note: only relevant files are shown in this browser'
-    Instruction3 = 'Click here to reset the project browser'
+    reset        = '[RESET]'
 
     # Parse the project name out of the Project file (e.g., (0_PROJECT.md)
     # Since it was converted from markdown to html, I remove the html tags
@@ -415,13 +433,13 @@ def write_navigation(fsspath, repo, project, projecttitle,
     # projectname = projectname.group(1)
 
     # format text elements
-    pagetitle    = "<p style=\"color:red;font-size:25px;\"> <strong>" + pagetitle + projecttitle + "</strong> </p>"
+    pagetitle    = "<p style=\"color:green;font-size:25px;\"> <strong>" + pagetitle + projecttitle + "</strong> </p>"
     information  = "<p style=\"color:blue;font-size:20px;\"><strong>" + information + "</strong></p>"
     starting     = "<p style=\"color:blue;font-size:20px;\"><strong>" + starting + "</strong></p>"
-    browser      = "<p style=\"color:blue;font-size:20px;\"><strong>" + browser + "</strong></p>"
+    reset        = "<a style=\"color:red;font-size:16px;\" target=\"_top\" href=\".\\..\\Navigate.html\">" + reset + "</a>"
+    browser      = "<p style=\"color:blue;font-size:20px;\"><strong>" + browser + " " + reset + "</strong></p>"
     DateTime     = "Generated on: " + today.strftime("%B %d, %Y (%H:%M:%S)")  # Textual month, day and year
     repo         = "<p style=\"color:black;font-size:16px;\">" + repo + "</p>"
-    Instruction3 = "<p><a target=\"_top\" href=\".\\..\\Navigate.html\">" + Instruction3 + "</a></p>"
 
     # Copy navigation template
     # The navigation template defines four iframes in which all content will be displayed
@@ -463,7 +481,6 @@ def write_navigation(fsspath, repo, project, projecttitle,
         f.write(line)          # html line
         f.write(repo)          # Name of github repository
         f.write(Instruction1)  # Line with instructions
-        f.write(Instruction3)  # Line with instructions
         f.write(fss)           # FSS structure
         f.write(Instruction2)  # Line with instructions
         f.write(line)          # html line
@@ -474,7 +491,7 @@ def write_navigation(fsspath, repo, project, projecttitle,
 # END OF FUNCTION write_navigation
 
 
-def create_navigate(fsspath=".", navdir=".navigate", navigatedir="", confdir="", conffile="Navigation.conf"):
+def create_navigate(*, fsspath=".", navdir=".navigate", navigatedir="", confdir="", conffile="Navigation.conf"):
     """
     Main function to create Navigate.html
     :param str fsspath: Location of standardized fle system structure (FSS). This path should point to the
@@ -539,4 +556,10 @@ def create_navigate(fsspath=".", navdir=".navigate", navigatedir="", confdir="",
 
 create_navigate()
 
-#%%
+if __name__ == "__main__":
+    import sys
+    create_navigate(fsspath=".", navdir=".navigate",
+                    navigatedir="", confdir="",
+                    conffile="Navigation.conf") # (sys.argv[1])
+
+#fsspath=".", navdir=".navigate", navigatedir="", confdir="", conffile="Navigation.conf"
