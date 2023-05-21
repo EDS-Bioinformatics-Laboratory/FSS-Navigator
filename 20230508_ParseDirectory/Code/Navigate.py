@@ -1,33 +1,30 @@
-###################################################################################################
-# Program:  Navigate.py
-# Function: show the standardized File System Structure (FSS) of a project in
-#           a html file to allow easy navigation
-# Authors:  Antoine van Kampen, Aldo Jongejan, Utkarsh Mahamune
-#           Bioinformatics Laboratory, Amsterdam UMC, the Netherlands
-# Date:     9 May 2023
-#
-# This software is to be used as part of ENCORE, the approach to improve the
-# reproducibility of computational projects.
-#
-# Function call:
-#    create_navigate(.....)
-#
-# Updates:
-# 9 May 2023: First version
-# 10 May 2023: Solved path problems and other issues with the parsing. Script now uses
-#              path.join in order to work on Mac/Unix/Windows
-# 11 May 2023:
-# 12 May 2023: - Created main function to execute the full program
-#              - No longer requires to define the directory paths as global variables
-#              - Pre-parsed all markdown files to facilitate visualizataion in browser
-#              - Completed docstring documentation
-# 15 May 2023  - All markdown files are now correctly parsed and shown in Navigate.html
-# 16 May 2023  - Changed name of html template
-#              - Navigate.py can now be executed from the command line or imported as a
-#              - module.
-#                   - <path to python>\python.exe Navigate.py --help
-#                   - import Navigate
-#################################################################################################
+'''
+
+Program
+--------
+Navigate.py (9 May 2023) \n
+|
+Description
+------------
+Show the standardized File System Structure (FSS) of a project in a html file to allow easy navigation.
+This software is to be used as part of ENCORE, the approach to improve the reproducibility of
+computational projects. \n
+|
+Authors
+-------
+Antoine van Kampen, Aldo Jongejan, Utkarsh Mahamune \n
+Bioinformatics Laboratory, Amsterdam UMC, the Netherlands \n
+https://www.bioinformaticslaboratory.eu \n
+|
+Function call
+-------------
+create_navigate(.....) \n
+|
+Command line
+------------
+Navigate.py -h \n
+|
+'''
 
 import os
 import markdown            # conversion markdown to html
@@ -587,18 +584,6 @@ if __name__ == "__main__":
 
     args = vars(parser.parse_args())
 
-    #fsspath     = ''.join(args["fsspath"])
-    #navdir      = ''.join(args["navdir"])
-    #navigatedir = ''.join(args["navigatedir"])
-    #confdir     = ''.join(args["confdir"])
-    #conffile    = ''.join(args["conffile"])
-
-    #create_navigate(fsspath     = fsspath,
-    #                navdir      = navdir,
-    #                navigatedir = navigatedir,
-    #                confdir     = confdir,
-    #                conffile    = conffile)
-
     create_navigate(fsspath     = args["fsspath"],
                     navdir      = args["navdir"],
                     navigatedir = args["navigatedir"],
@@ -608,3 +593,5 @@ if __name__ == "__main__":
 
 
 
+
+#%%

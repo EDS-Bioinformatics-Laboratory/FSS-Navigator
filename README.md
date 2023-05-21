@@ -103,6 +103,53 @@ In this configuration file you can specify
 
 
 
+
+
+------
+
+**COMPILATION**
+
+------
+
+**WINDOWS**
+
+A Windows executable is also available: **Navigate.exe**. This executable was created using pyinstaller (https://pyinstaller.org/en/stable/):
+
+Requires installation of pyinstaller and pywin32: 
+
+
+
+To compile:
+
+\> pyinstaller --onefile Navigate.py
+
+
+
+<u>Notes:</u>
+
+* If Navigate.py is in a Dropbox folder then first stop syncing before compilation. Otherwise the program will not compile. 
+* The compilation process will make a 'build' and 'dist' directory in the root of the FSS. The 'dist' directory contains the executable program (Navigate.exe) that should be copied to the root of the FSS. The 'build' and 'dist' directories can be removed.
+
+
+
+**Unix/Linux**
+
+If Python 3 is installed on your Unix/Linux computer, then the easiest way (without compilation) is to
+
+* Add **#!/[path/to/python]** at the start of your script (**#!/usr/bin/python3 on Ukkepuk**). 
+* Change the name from Navigate.py to Navigate
+* Make the script executable from the command line: chmod +x ./Navigate
+
+Now you can execute the script
+
+
+
+**Mac**
+
+The Unix/Linus recipee should probably also work on Mac.
+
+
+
 ------
 
 **TESTING**
@@ -150,5 +197,6 @@ There should be a **0_GETTINGSTARTED.html**. This file can be made in any editor
 * The Python program assumes a strict naming of the pre-defined files in the FSS according as outlined in the usage rules of the FSS.
 * Directories starting with a dot (e.g., .git) are not recognized as a directory.  Not really a problem but needs to be solved. 
 * The construct 'item in' searches for substrings. Therefore, if you have a file test.abc and in the configuration file you specify filesInclude = xtest.abc, then test.abc is also included in the tree.
+* Currently, it is not possible to specify a different location for .navigate using the command line options. This directory should be in the root of the FSS. If .navigate is at a different location, then the links in the html files (parsed from markdown) will no longer work. Can probably be quite easily fixed by making a change to the parse functions.
 * Figures are shown in a separate browswer tab since these are not automatically scaled to the size of the iframe in navigate-template.html
 * To run Navigate.py it requires Python to be installed on your computer. A compiled version will be made available later in order to run the program without a Python installation.
