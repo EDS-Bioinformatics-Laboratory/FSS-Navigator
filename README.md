@@ -199,6 +199,5 @@ There should be a **0_GETTINGSTARTED.html**. This file can be made in any editor
 * Directories starting with a dot (e.g., .git) are not recognized as a directory.  Not really a problem but needs to be solved. 
 * The construct 'item in' searches for substrings. Therefore, if you have a file test.abc and in the configuration file you specify filesInclude = xtest.abc, then test.abc is also included in the tree.
 * Currently, it is not possible to specify a different location for .navigate using the command line options. This directory should be in the root of the FSS. If .navigate is at a different location, then the links in the html files (parsed from markdown) will no longer work. Can probably be quite easily fixed by making a change to the parse functions.
-* Figures are shown in a separate browswer tab since these are not automatically scaled to the size of the iframe in navigate-template.html
-* To run Navigate.py it requires Python to be installed on your computer. A compiled version will be made available later in order to run the program without a Python installation.
+* Figures are shown in a separate browser tab since these are not automatically scaled to the size of the iframe in navigate-template.html
 * Note that the Windows executable might be blocked by Windows defender or other anti-virus software. Not sure how to solve this. See also, for example, https://stackoverflow.com/questions/43777106/program-made-with-pyinstaller-now-seen-as-a-trojan-horse-by-avg.
