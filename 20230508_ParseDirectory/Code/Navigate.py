@@ -27,6 +27,7 @@ Navigate.py -h \n
 '''
 
 import os
+import sys
 import markdown            # conversion markdown to html
 import shutil              # copying files
 import configparser        # to read/parse configuration file
@@ -293,7 +294,12 @@ def save_getting_started(fsspath, line, title, navdir, filename="0_GETTINGSTARTE
      """
 
     with open(os.path.join(fsspath, filename), "r") as f:
-        start = f.read()   # read html file
+        try:
+            start = f.read()   # read html file
+        except Exception:
+            print("Error!")
+            print(f"Make sure that you used utf-8 encoding for {filename}")
+            sys.exit(1)
 
     # Format and save
     #

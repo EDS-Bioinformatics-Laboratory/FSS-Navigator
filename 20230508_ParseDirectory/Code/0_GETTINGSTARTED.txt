@@ -1,11 +1,12 @@
-This is a template document. 
+﻿This is a template document. 
 
 
 This document (0_GETTINGSTARTED.txt) should introduce a new user of the standardized File System Structure (FSS) to the most important aspects of your project. This should allow him/her to quickly reproduce the main results. You can include figures and tables whereever needed.
 
 
 You should link relevant directories and/or files from this document by defining relative hyperlinks (i.e., relative to the root of the FSS) to specific subdirectories or files. For example:
-- ./Processing
+- ./Processing 
+- You can find the code [HERE]
 - ./Data/0_README.md 
 
 
