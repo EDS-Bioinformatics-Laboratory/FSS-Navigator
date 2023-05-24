@@ -1,30 +1,28 @@
-'''
-
+"""
 Program
 --------
 Navigate.py (9 May 2023) \n
-|
+
 Description
 ------------
 Show the standardized File System Structure (FSS) of a project in a html file to allow easy navigation.
 This software is to be used as part of ENCORE, the approach to improve the reproducibility of
 computational projects. \n
-|
+
 Authors
 -------
 Antoine van Kampen, Aldo Jongejan, Utkarsh Mahamune \n
 Bioinformatics Laboratory, Amsterdam UMC, the Netherlands \n
 https://www.bioinformaticslaboratory.eu \n
-|
+
 Function call
 -------------
 create_navigate(.....) \n
-|
+
 Command line
 ------------
 Navigate.py -h \n
-|
-'''
+"""
 
 import os
 import sys
@@ -46,41 +44,40 @@ def create_directory_structure(itempath, fsspath, navdir, showall,
                                filetypes, filesexclude,
                                filesinclude, filetypesexclude,
                                direxclude, fileshelp):
-    """
-     This function takes arguments to include/exclude files, filetypes, and subdirectories.
-     Note: 'filetypes' determines the filetypes to be included. This would make 'filetypesexclude' unnecessary.
-     However, here we have the situation that we would like to include .txt files but to exclude '*-template.txt'
-     files, which can now be specified in the filetypesexclude argument.
-     Alternatively, we could have listed all the individual template files in the filesexclude tuple.
+    """This function takes arguments to include/exclude files, filetypes, and subdirectories.
+    Note: 'filetypes' determines the filetypes to be included. This would make 'filetypesexclude' unnecessary.
+    However, here we have the situation that we would like to include .txt files but to exclude '\*-template.txt'
+    files, which can now be specified in the filetypesexclude argument.
+    Alternatively, we could have listed all the individual template files in the filesexclude tuple.
 
     Parameters
     -----------
-     itempath: str
-        Intially location of FSS (FSSPath) but is updated during the recursion of this function
-     fsspath: str
-        Location of standardized fle system structure (FSS). This path should point to the
-        root of the FSS. Preferably, this is a relative path. The default of this path is ".".
-     navdir: str
-        Location of navigation directory (.navigate)
-     showall: int
-        if showall = 1 then show all subdirectories and all files includes/excludes are neglected
-     filetypes: str
-        filetypes to include in the directory tree
-     filesexclude: str
+    itempath: str
+       Intially location of FSS (FSSPath) but is updated during the recursion of this function
+    fsspath: str
+       Location of standardized fle system structure (FSS). This path should point to the
+       root of the FSS. Preferably, this is a relative path. The default of this path is ".".
+    navdir: str
+       Location of navigation directory (.navigate)
+    showall: int
+       if showall = 1 then show all subdirectories and all files includes/excludes are neglected
+    filetypes: str
+       filetypes to include in the directory tree
+    filesexclude: str
         files to exclude from the directory tree
-     filesinclude: str
-        files to include in the directory tree
-     filetypesexclude: str
-        file types to exclude from the directory tree
-     direxclude: str
-        directories to exclude from the directory tree
-     fileshelp: str
-        help files to exclude from the directory tree
+    filesinclude: str
+       files to include in the directory tree
+    filetypesexclude: str
+       file types to exclude from the directory tree
+    direxclude: str
+       directories to exclude from the directory tree
+    fileshelp: str
+       help files to exclude from the directory tree
 
     RETURNS
     -------
     str
-        Directory hierarchy of the standardized file system structure (FSS) with hyperlinked files
+      Directory hierarchy of the standardized file system structure (FSS) with hyperlinked files
  """
 
     directories = []
@@ -131,7 +128,8 @@ def create_directory_structure(itempath, fsspath, navdir, showall,
                                                                         # scaled properly in the iframe
             content += f"<li><a target=\"_blank\" href=\"..\{escape(item_path)}\">{escape(item)}</a></li>"
             # next line tried to open image in new window, but doesn't work (in Chrome)
-            # content += f"<a href=\"javascript:window.open('{item_path}', 'newwindow', 'width=300,height=250')\">{escape(item)}</a>"
+            # content += f"<a href=\"javascript:window.open('{item_path}', 'newwindow',
+            # 'width=300,height=250')\">{escape(item)}</a>"
         elif item.endswith(".md"):  # Markdown files should be parsed to html to facilitate visualization
                                     # The html file is written to .navigate in the root of the FSS
                                     # Subsequently, the href link should point to the html file
@@ -144,14 +142,16 @@ def create_directory_structure(itempath, fsspath, navdir, showall,
 
 
 def clean_navigate(fsspath, navdir):
+    """This function removes all files except navigate-template.html from the .navigate directory prior to
+    making a new Navigation.html.
+
+    :param str fsspath:
+        Location of standardized fle system structure (FSS). This path should point to the root
+        of the FSS. Preferably, this is a relative path. The default of this path is "." .
+    :param str navdir:
+        location of the .navigate directory
     """
-    This function removes all files except navigate-template.html from the .navigate directory prior to
-    making a new Navigation.html
-    :param str fsspath: Location of standardized fle system structure (FSS). This path should point to the
-        root of the FSS. Preferably, this is a relative path. The default of this path is ".".
-    :param str navdir: location of .navigate directory
-    """
-    retain = ["__navigate-template.html__"]  # don't delete these files
+    retain = ["__navigate-template.html__", "0_README.md"]  # don't delete these files
 
     # Loop through all files
     for item in os.listdir(os.path.join(fsspath, navdir)):
@@ -161,8 +161,7 @@ def clean_navigate(fsspath, navdir):
 
 
 def get_random_string(length):
-    """
-    Generate random string from lower-case letters
+    """Generate random string from lower-case letters
 
     :param int length: Length of string
     :return: random string of specified length
@@ -174,8 +173,8 @@ def get_random_string(length):
 
 
 def md2html(navdir, itempath, item):
-    """
-    Convert markdown file (.md) to html (.html) file
+    """Convert markdown file (.md) to html (.html) file
+
     :param str navdir:  location of .navigate directory
     :param str itempath: location of markdown file
     :param str item: markdown file to be converted
@@ -207,10 +206,10 @@ def md2html(navdir, itempath, item):
 
 
 def parse_project(fsspath, filename):
-    """
-    Function to parse the Project file (0_PROJECT.md) and convert to HTML. This file contains the general project information
-    and should be displayed together with the project organization (i.e., the FSS). The converted markdown file is
-    also saved as a html file in .navigate to be displayed in the project navigation window.
+    """Function to parse the Project file (0_PROJECT.md) and convert to HTML. This file contains
+    the general project information and should be displayed together with the project organization
+    (i.e., the FSS). The converted markdown file is also saved as a html file in .navigate to be displayed
+    in the project navigation window.
 
     The Project file is should be located in the root of the FSS
 
@@ -243,8 +242,7 @@ def parse_project(fsspath, filename):
 
 
 def save_project(fsspath, project, line, title, navdir):
-    """
-    Format and save Project file (e.g., 0_PROJECT.md) as html file in .navigate.
+    """Format and save Project file (e.g., 0_PROJECT.md) as html file in .navigate.
 
     Parameters
     ----------
@@ -276,22 +274,26 @@ def save_project(fsspath, project, line, title, navdir):
 
 
 def save_getting_started(fsspath, line, title, navdir, filename="0_GETTINGSTARTED.html"):
-    """
-     Format and save the html file that serves as a starting point for researchers who aim to reproduce the
-     project. It will show the most important results together with the data and/or code that was used to
-     produce it.
+    """Format and save the html file that serves as a starting point for researchers who aim to reproduce the
+    project. It will show the most important results together with the data and/or code that was used to
+    produce it.
 
-     :param str fsspath: Location of standardized fle system structure (FSS). This path should point to the
+    :param str fsspath:
+        Location of standardized fle system structure (FSS). This path should point to the
         root of the FSS. Preferably, this is a relative path. The default of this path is ".".
-     :param str line: formated html line
-     :param str title: section title
-     :param str navdir: location of .navigate
-     :param str filename: html file contain most important aspects of project. The
-         default filename is '0_GETTING_STARTED.html'. This file should be located in the root of the FSS. This
-        document can be prepared with any text editor (e.g., Microsoft Word, LaTex), and subsequently converted
-        to html. The document should contain relative hyperlinks to the relevant subdirectories and/or files (e.g.,
-        ./ProjectDocumentation or ./Processing/README.md).
-     """
+    :param str line:
+        Formatted html line
+    :param str title:
+        Section title
+    :param str navdir:
+        Location of .navigate
+    :param str filename:
+        Html file contain most important aspects of project. The default filename is '0_GETTING_STARTED.html'.
+        This file should be located in the root of the FSS. This document can be prepared with any text editor
+        (e.g., Microsoft Word, LaTex), and subsequently converted to html. The document should contain
+        relative hyperlinks to the relevant subdirectories and/or files (e.g., ./ProjectDocumentation
+        or ./Processing/README.md).
+    """
 
     with open(os.path.join(fsspath, filename), "r") as f:
         try:
@@ -312,9 +314,9 @@ def save_getting_started(fsspath, line, title, navdir, filename="0_GETTINGSTARTE
 
     for item in a:
         item_backup    = item
-        item           = item.replace('%20', ' ') # otherwise file wil not open in md2thml
+        item           = item.replace('%20', ' ')  # otherwise file wil not open in md2thml
         mdpath, mdfile = os.path.split(item)
-        new_mdpath     = md2html(navdir, item, mdfile) # do the conversion
+        new_mdpath     = md2html(navdir, item, mdfile)  # do the conversion
         start          = start.replace(item_backup, new_mdpath)
 
     # Change all paths relative to the root of the FSS
@@ -331,13 +333,12 @@ def save_getting_started(fsspath, line, title, navdir, filename="0_GETTINGSTARTE
 
 
 def parse_repo(fsspath, filename="github.txt"):
-    """
-    Function to get the name of the GitHub repository corresponding to the project.
+    """Function to get the name of the GitHub repository corresponding to the project.
     From github.txt in /Processing
-    The repository is identified by looking for the last line in this file that
-        ends with .git
-        starts with http
-        starts with github.com
+    The repository is identified by looking for the last line in this file that\n
+        -ends with .git\n
+        -starts with http\n
+        -starts with github.com\n
 
     :param str fsspath: Location of standardized fle system structure (FSS). This path should point to the
         root of the FSS. Preferably, this is a relative path. The default of this path is ".".
@@ -359,12 +360,15 @@ def parse_repo(fsspath, filename="github.txt"):
 
 
 def read_config(confdir, fsspath, filename="Navigation.conf"):
-    """
-    Function to read and parse the configuration file
-    :param str confdir: location of configuration file
-    :param str fsspath: Location of standardized fle system structure (FSS). This path should point to the
+    """Function to read and parse the configuration file
+
+    :param str confdir:
+        Location of configuration file
+    :param str fsspath:
+        Location of standardized fle system structure (FSS). This path should point to the
         root of the FSS. Preferably, this is a relative path. The default of this path is ".".
-    :param str filename: name of configuration file
+    :param str filename:
+        Name of configuration file
     :return: configuration settings
     """
     config = configparser.ConfigParser()
@@ -374,8 +378,9 @@ def read_config(confdir, fsspath, filename="Navigation.conf"):
 
 
 def s2t(string):
-    """
-    This function splits a string (obtained from read_config) and converts in to a tuple using the comma as a delimiter
+    """This function splits a string (obtained from read_config) and converts in to a tuple
+    using the comma as a delimiter
+
     :param str string: input string
     :return: tuple containing the separate parts of the string
     """
@@ -389,8 +394,7 @@ def s2t(string):
 def write_navigation(fsspath, repo, project, projecttitle,
                      gettingstarted, directory_structure,
                      navdir, navigatedir):
-    """
-    Write Navigation.html
+    """Write Navigation.html
 
     :param str fsspath: Location of standardized fle system structure (FSS). This path should point to the
         root of the FSS. Preferably, this is a relative path. The default of this path is ".".
@@ -443,7 +447,8 @@ def write_navigation(fsspath, repo, project, projecttitle,
     pagetitle    = "<p style=\"color:green;font-size:25px;\"> <strong>" + pagetitle + projecttitle + "</strong> </p>"
     information  = "<p style=\"color:blue;font-size:20px;\"><strong>" + information + "</strong></p>"
     starting     = "<p style=\"color:blue;font-size:20px;\"><strong>" + starting + "</strong></p>"
-    reset        = "<a style=\"color:red;font-size:16px;\" target=\"_top\" href=\".\\..\\Navigate.html\">" + reset + "</a>"
+    reset        = "<a style=\"color:red;font-size:16px;\" target=\"_top\" href=\".\\..\\Navigate.html\">" + \
+                   reset + "</a>"
     browser      = "<p style=\"color:blue;font-size:20px;\"><strong>" + browser + " " + reset + "</strong></p>"
     DateTime     = "Generated on: " + today.strftime("%B %d, %Y (%H:%M:%S)")  # Textual month, day and year
     repo         = "<p style=\"color:black;font-size:16px;\">" + repo + "</p>"
@@ -498,14 +503,13 @@ def write_navigation(fsspath, repo, project, projecttitle,
 # END OF FUNCTION write_navigation
 
 
-def create_navigate(*, fsspath=".", navdir=".navigate", navigatedir="", confdir="", conffile="Navigation.conf"):
-    """
-    Main function to create Navigate.html. This html file can be opened in your web-browser to
+def create_navigate(fsspath=".", navdir=".navigate", navigatedir="", confdir="", conffile="Navigation.conf"):
+    """Main function to create Navigate.html. This html file can be opened in your web-browser to
     explore all the files in the project (i.e., the standardized File System Structure; FSS). Note
     that specific files and/or sub-directories may have been excluded from the navigation page. This
     can be configured in the Configuration file.
-    :param str fsspath: Location of standardized fle system structure (FSS). This path should point to the
-        root of the FSS. Preferably, this is a relative path. The default of this path is ".".
+
+    :param str fsspath: Location of standardized fle system structure (FSS). This path should point to the root of the FSS. Preferably, this is a relative path. The default of this path is ".".
     :param str navdir: location of .navigate
     :param str navigatedir: location of output file (Navigation.html)
     :param str confdir: location of configuration file
@@ -577,27 +581,23 @@ if __name__ == "__main__":
 
     # Parse command line arguments
     parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-f", "--fsspath",     default = ".",               help = "Root of standardized FSS")
-    parser.add_argument("-n", "--navdir",      default = ".navigate",       help = "Location of .navigate")
-    parser.add_argument("-N", "--navigatedir", default = "",                help = "Location of output file (Navigate.html")
-    parser.add_argument("-c", "--confdir",     default = "",                help = "Location of configuration file")
-    parser.add_argument("-C", "--conffile",    default = "Navigation.conf", help = "Name of configuration file")
+    parser.add_argument("-f", "--fsspath",     default=".",               help="Root of standardized FSS")
+    parser.add_argument("-n", "--navdir",      default=".navigate",       help="Location of .navigate")
+    parser.add_argument("-N", "--navigatedir", default="",                help="Location of output file (Navigate.html")
+    parser.add_argument("-c", "--confdir",     default="",                help="Location of configuration file")
+    parser.add_argument("-C", "--conffile",    default="Navigation.conf", help="Name of configuration file")
 
     # The next three arguments are added to prevent an error when running in JetBrains DataSpell/PyCharm
-    parser.add_argument("--mode", default = 'client',                       help = "Please neglect. Only to enable execution from DataSpell/PyCharm")
-    parser.add_argument("--host", default = '127.0.0.1',                    help = "Please neglect. Only to enable execution from DataSpell/PyCharm")
-    parser.add_argument("--port", default = 52162,                          help = "Please neglect. Only to enable execution from DataSpell/PyCharm")
+    parser.add_argument("--mode", default='client', help="Neglect. Only to enable execution from DataSpell/PyCharm")
+    parser.add_argument("--host", default='127.0.0.1', help="Neglect. Only to enable execution from DataSpell/PyCharm")
+    parser.add_argument("--port", default=52162, help="Neglect. Only to enable execution from DataSpell/PyCharm")
 
     args = vars(parser.parse_args())
 
-    create_navigate(fsspath     = args["fsspath"],
-                    navdir      = args["navdir"],
-                    navigatedir = args["navigatedir"],
-                    confdir     = args["confdir"],
-                    conffile    = args["conffile"])
-
-
-
-
+    create_navigate(fsspath=args["fsspath"],
+                    navdir=args["navdir"],
+                    navigatedir=args["navigatedir"],
+                    confdir=args["confdir"],
+                    conffile=args["conffile"])
 
 #%%
