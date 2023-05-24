@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Navigate &mdash; FSS Navigator 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> FSS Navigator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">FSS Navigator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">Navigate</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Navigate</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Program</span>
+<span class="sd">--------</span>
+<span class="sd">Navigate.py (9 May 2023) \n</span>
+
+<span class="sd">Description</span>
+<span class="sd">------------</span>
+<span class="sd">Show the standardized File System Structure (FSS) of a project in a html file to allow easy navigation.</span>
+<span class="sd">This software is to be used as part of ENCORE, the approach to improve the reproducibility of</span>
+<span class="sd">computational projects. \n</span>
+
+<span class="sd">Authors</span>
+<span class="sd">-------</span>
+<span class="sd">Antoine van Kampen, Aldo Jongejan, Utkarsh Mahamune \n</span>
+<span class="sd">Bioinformatics Laboratory, Amsterdam UMC, the Netherlands \n</span>
+<span class="sd">https://www.bioinformaticslaboratory.eu \n</span>
+
+<span class="sd">Function call</span>
+<span class="sd">-------------</span>
+<span class="sd">create_navigate(.....) \n</span>
+
+<span class="sd">Command line</span>
+<span class="sd">------------</span>
+<span class="sd">Navigate.py -h \n</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">markdown</span>            <span class="c1"># conversion markdown to html</span>
+<span class="kn">import</span> <span class="nn">shutil</span>              <span class="c1"># copying files</span>
+<span class="kn">import</span> <span class="nn">configparser</span>        <span class="c1"># to read/parse configuration file</span>
+<span class="kn">from</span> <span class="nn">html</span> <span class="kn">import</span> <span class="n">escape</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">import</span> <span class="nn">re</span>                  <span class="c1"># regular expressions</span>
+
+
+<span class="c1">########################</span>
+<span class="c1"># FUNCTION DEFINITION</span>
+<span class="c1">########################</span>
+
+<div class="viewcode-block" id="create_directory_structure"><a class="viewcode-back" href="../Navigate.html#Navigate.create_directory_structure">[docs]</a><span class="k">def</span> <span class="nf">create_directory_structure</span><span class="p">(</span><span class="n">itempath</span><span class="p">,</span> <span class="n">fsspath</span><span class="p">,</span> <span class="n">navdir</span><span class="p">,</span> <span class="n">showall</span><span class="p">,</span>
+                               <span class="n">filetypes</span><span class="p">,</span> <span class="n">filesexclude</span><span class="p">,</span>
+                               <span class="n">filesinclude</span><span class="p">,</span> <span class="n">filetypesexclude</span><span class="p">,</span>
+                               <span class="n">direxclude</span><span class="p">,</span> <span class="n">fileshelp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function takes arguments to include/exclude files, filetypes, and subdirectories.</span>
+<span class="sd">    Note: &#39;filetypes&#39; determines the filetypes to be included. This would make &#39;filetypesexclude&#39; unnecessary.</span>
+<span class="sd">    However, here we have the situation that we would like to include .txt files but to exclude &#39;\*-template.txt&#39;</span>
+<span class="sd">    files, which can now be specified in the filetypesexclude argument.</span>
+<span class="sd">    Alternatively, we could have listed all the individual template files in the filesexclude tuple.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------</span>
+<span class="sd">    itempath: str</span>
+<span class="sd">       Intially location of FSS (FSSPath) but is updated during the recursion of this function</span>
+<span class="sd">    fsspath: str</span>
+<span class="sd">       Location of standardized fle system structure (FSS). This path should point to the</span>
+<span class="sd">       root of the FSS. Preferably, this is a relative path. The default of this path is &quot;.&quot;.</span>
+<span class="sd">    navdir: str</span>
+<span class="sd">       Location of navigation directory (.navigate)</span>
+<span class="sd">    showall: int</span>
+<span class="sd">       if showall = 1 then show all subdirectories and all files includes/excludes are neglected</span>
+<span class="sd">    filetypes: str</span>
+<span class="sd">       filetypes to include in the directory tree</span>
+<span class="sd">    filesexclude: str</span>
+<span class="sd">        files to exclude from the directory tree</span>
+<span class="sd">    filesinclude: str</span>
+<span class="sd">       files to include in the directory tree</span>
+<span class="sd">    filetypesexclude: str</span>
+<span class="sd">       file types to exclude from the directory tree</span>
+<span class="sd">    direxclude: str</span>
+<span class="sd">       directories to exclude from the directory tree</span>
+<span class="sd">    fileshelp: str</span>
+<span class="sd">       help files to exclude from the directory tree</span>
+
+<span class="sd">    RETURNS</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">      Directory hierarchy of the standardized file system structure (FSS) with hyperlinked files</span>
+<span class="sd"> &quot;&quot;&quot;</span>
+
+    <span class="n">directories</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">showall</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># Show complete directory structure (1) or not (&lt;&gt;1)</span>
+        <span class="n">showall</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Get all subdirectories and files (using the includes and excludes)</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">itempath</span><span class="p">):</span>
+        <span class="n">item_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">itempath</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">item_path</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">direxclude</span><span class="p">):</span>
+            <span class="n">directories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">showall</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># Show all files</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">filetypes</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="p">(</span><span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">filesexclude</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="p">(</span><span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fileshelp</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="p">(</span><span class="ow">not</span> <span class="n">item</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">filetypesexclude</span><span class="p">))):</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">filesinclude</span><span class="p">:</span>
+            <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="c1"># Sort in alphabetical order</span>
+    <span class="n">directories</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">files</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+    <span class="c1"># Convert directory structure/files to tree (html format)</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">directories</span><span class="p">:</span>
+        <span class="n">item_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">itempath</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+        <span class="n">content</span>  <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&lt;details&gt;&lt;summary&gt;&lt;strong&gt;</span><span class="si">{</span><span class="n">escape</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/strong&gt;&lt;/summary&gt;&lt;/li&gt;&quot;</span>
+        <span class="n">content</span>  <span class="o">+=</span> <span class="s2">&quot;&lt;ul&gt;&quot;</span>
+        <span class="n">content</span>  <span class="o">+=</span> <span class="n">create_directory_structure</span><span class="p">(</span><span class="n">item_path</span><span class="p">,</span> <span class="n">fsspath</span><span class="p">,</span> <span class="n">navdir</span><span class="p">,</span>
+                                               <span class="n">showall</span><span class="p">,</span> <span class="n">filetypes</span><span class="p">,</span>
+                                               <span class="n">filesexclude</span><span class="p">,</span> <span class="n">filesinclude</span><span class="p">,</span>
+                                               <span class="n">filetypesexclude</span><span class="p">,</span> <span class="n">direxclude</span><span class="p">,</span> <span class="n">fileshelp</span><span class="p">)</span>
+        <span class="n">content</span> <span class="o">+=</span> <span class="s2">&quot;&lt;/ul&gt;&quot;</span>
+        <span class="n">content</span> <span class="o">+=</span> <span class="s2">&quot;&lt;/details&gt;&quot;</span>
+
+    <span class="c1"># Note: the html output will be shown in Navigation.html, which is a predefined HTML file</span>
+    <span class="c1"># containing 4 iframes. The tree is shown in the upper left corner. The content of the</span>
+    <span class="c1"># files are shown in &#39;frame-2&#39;  (upper right corner).</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+        <span class="n">item_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">itempath</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;.png&quot;</span><span class="p">,</span> <span class="s2">&quot;.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;.jpeg&quot;</span><span class="p">,</span> <span class="s2">&quot;.svg&quot;</span><span class="p">,</span> <span class="s2">&quot;.gif&quot;</span><span class="p">)):</span>  <span class="c1"># images should be open in separate</span>
+                                                                        <span class="c1"># tab/window because these are not</span>
+                                                                        <span class="c1"># scaled properly in the iframe</span>
+            <span class="n">content</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&lt;li&gt;&lt;a target=</span><span class="se">\&quot;</span><span class="s2">_blank</span><span class="se">\&quot;</span><span class="s2"> href=</span><span class="se">\&quot;</span><span class="s2">..\</span><span class="si">{</span><span class="n">escape</span><span class="p">(</span><span class="n">item_path</span><span class="p">)</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2">&gt;</span><span class="si">{</span><span class="n">escape</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/a&gt;&lt;/li&gt;&quot;</span>
+            <span class="c1"># next line tried to open image in new window, but doesn&#39;t work (in Chrome)</span>
+            <span class="c1"># content += f&quot;&lt;a href=\&quot;javascript:window.open(&#39;{item_path}&#39;, &#39;newwindow&#39;,</span>
+            <span class="c1"># &#39;width=300,height=250&#39;)\&quot;&gt;{escape(item)}&lt;/a&gt;&quot;</span>
+        <span class="k">elif</span> <span class="n">item</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.md&quot;</span><span class="p">):</span>  <span class="c1"># Markdown files should be parsed to html to facilitate visualization</span>
+                                    <span class="c1"># The html file is written to .navigate in the root of the FSS</span>
+                                    <span class="c1"># Subsequently, the href link should point to the html file</span>
+            <span class="n">new_item_path</span> <span class="o">=</span> <span class="n">md2html</span><span class="p">(</span><span class="n">navdir</span><span class="p">,</span> <span class="n">item_path</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>  <span class="c1"># points to html in .navigate</span>
+            <span class="n">content</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&lt;li&gt;&lt;a href=</span><span class="se">\&quot;</span><span class="s2">..\</span><span class="si">{</span><span class="n">escape</span><span class="p">(</span><span class="n">new_item_path</span><span class="p">)</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"> target=</span><span class="se">\&quot;</span><span class="s2">frame-2</span><span class="se">\&quot;</span><span class="s2">&gt;</span><span class="si">{</span><span class="n">escape</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/a&gt;&lt;/li&gt;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">content</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&lt;li&gt;&lt;a href=</span><span class="se">\&quot;</span><span class="s2">..\</span><span class="si">{</span><span class="n">escape</span><span class="p">(</span><span class="n">item_path</span><span class="p">)</span><span class="si">}</span><span class="se">\&quot;</span><span class="s2"> target=</span><span class="se">\&quot;</span><span class="s2">frame-2</span><span class="se">\&quot;</span><span class="s2">&gt;</span><span class="si">{</span><span class="n">escape</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="si">}</span><span class="s2">&lt;/a&gt;&lt;/li&gt;&quot;</span>
+    <span class="k">return</span> <span class="n">content</span></div>
+<span class="c1"># END OF FUNCTION create_directory_structure</span>
+
+
+<div class="viewcode-block" id="clean_navigate"><a class="viewcode-back" href="../Navigate.html#Navigate.clean_navigate">[docs]</a><span class="k">def</span> <span class="nf">clean_navigate</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">navdir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function removes all files except navigate-template.html from the .navigate directory prior to</span>
+<span class="sd">    making a new Navigation.html.</span>
+
+<span class="sd">    :param str fsspath:</span>
+<span class="sd">        Location of standardized fle system structure (FSS). This path should point to the root</span>
+<span class="sd">        of the FSS. Preferably, this is a relative path. The default of this path is &quot;.&quot; .</span>
+<span class="sd">    :param str navdir:</span>
+<span class="sd">        location of the .navigate directory</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">retain</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;__navigate-template.html__&quot;</span><span class="p">,</span> <span class="s2">&quot;0_README.md&quot;</span><span class="p">]</span>  <span class="c1"># don&#39;t delete these files</span>
+
+    <span class="c1"># Loop through all files</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">navdir</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">retain</span><span class="p">:</span>                              <span class="c1"># If it isn&#39;t in the list for retaining</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">navdir</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>  <span class="c1"># Remove the item</span></div>
+<span class="c1"># END OF FUNCTION clear_navigate</span>
+
+
+<div class="viewcode-block" id="get_random_string"><a class="viewcode-back" href="../Navigate.html#Navigate.get_random_string">[docs]</a><span class="k">def</span> <span class="nf">get_random_string</span><span class="p">(</span><span class="n">length</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate random string from lower-case letters</span>
+
+<span class="sd">    :param int length: Length of string</span>
+<span class="sd">    :return: random string of specified length</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">letters</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span>  <span class="c1"># choose from all lowercase letter</span>
+    <span class="n">rstr</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">letters</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">rstr</span></div>
+<span class="c1"># END OF FUNCTION get_random_string</span>
+
+
+<div class="viewcode-block" id="md2html"><a class="viewcode-back" href="../Navigate.html#Navigate.md2html">[docs]</a><span class="k">def</span> <span class="nf">md2html</span><span class="p">(</span><span class="n">navdir</span><span class="p">,</span> <span class="n">itempath</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert markdown file (.md) to html (.html) file</span>
+
+<span class="sd">    :param str navdir:  location of .navigate directory</span>
+<span class="sd">    :param str itempath: location of markdown file</span>
+<span class="sd">    :param str item: markdown file to be converted</span>
+<span class="sd">    :return: Link to html file in .navigate</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">itempath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">md</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>             <span class="c1"># read complete markdown file</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">md</span><span class="p">)</span>  <span class="c1"># convert to html</span>
+
+    <span class="c1"># The resulting html file (project) will be saved in .navigate in the root</span>
+    <span class="c1"># of the FSS. Therefore, all paths presents in this file should be changed to</span>
+    <span class="c1"># be relative to the root again</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;href=</span><span class="se">\&quot;</span><span class="s1">.&#39;</span><span class="p">,</span> <span class="s1">&#39;target = &quot;frame-2&quot; href=</span><span class="se">\&quot;</span><span class="s1">.\..&#39;</span><span class="p">)</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;src=</span><span class="se">\&quot;</span><span class="s1">.&#39;</span><span class="p">,</span> <span class="s1">&#39;target = &quot;frame-2&quot; src=</span><span class="se">\&quot;</span><span class="s1">.\..&#39;</span><span class="p">)</span>
+
+    <span class="c1"># All converted markdown files will be written to navdir. To avoid files will be overwritten</span>
+    <span class="c1"># a random string is attached to the file name and the extension of the file is changed from</span>
+    <span class="c1"># md to html.</span>
+    <span class="n">rstr</span> <span class="o">=</span> <span class="n">get_random_string</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="n">item</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">rstr</span> <span class="o">+</span> <span class="s1">&#39;.html&#39;</span>  <span class="c1"># replace file extension md --&gt; html</span>
+    <span class="n">new_itempath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">navdir</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">new_itempath</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">new_itempath</span></div>
+<span class="c1"># END OF FUNCTION md2html</span>
+
+
+<div class="viewcode-block" id="parse_project"><a class="viewcode-back" href="../Navigate.html#Navigate.parse_project">[docs]</a><span class="k">def</span> <span class="nf">parse_project</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to parse the Project file (0_PROJECT.md) and convert to HTML. This file contains</span>
+<span class="sd">    the general project information and should be displayed together with the project organization</span>
+<span class="sd">    (i.e., the FSS). The converted markdown file is also saved as a html file in .navigate to be displayed</span>
+<span class="sd">    in the project navigation window.</span>
+
+<span class="sd">    The Project file is should be located in the root of the FSS</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fsspath : str</span>
+<span class="sd">        Location of standardized fle system structure (FSS). This path should point to the</span>
+<span class="sd">        root of the FSS. Preferably, this is a relative path. The default of this path is &quot;.&quot;.</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        file name of markdown file</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        html version of the project description</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">markdown_text</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>                <span class="c1"># read complete markdown file</span>
+    <span class="n">project</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">markdown_text</span><span class="p">)</span>  <span class="c1"># convert to html</span>
+
+    <span class="c1"># The resulting html file (project) will be saved in .navigate in the root</span>
+    <span class="c1"># of the FSS. Therefore, all paths presents in this file should be changed to</span>
+    <span class="c1"># be relative to the root again</span>
+    <span class="n">project</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;href=</span><span class="se">\&quot;</span><span class="s1">.&#39;</span><span class="p">,</span> <span class="s1">&#39;target = &quot;frame-2&quot; href=</span><span class="se">\&quot;</span><span class="s1">.\..&#39;</span><span class="p">)</span>
+    <span class="n">project</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;src=</span><span class="se">\&quot;</span><span class="s1">.&#39;</span><span class="p">,</span> <span class="s1">&#39;target = &quot;frame-2&quot; src=</span><span class="se">\&quot;</span><span class="s1">.\..&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">project</span></div>
+<span class="c1"># END OF FUNCTION parse_project</span>
+
+
+<div class="viewcode-block" id="save_project"><a class="viewcode-back" href="../Navigate.html#Navigate.save_project">[docs]</a><span class="k">def</span> <span class="nf">save_project</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">navdir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Format and save Project file (e.g., 0_PROJECT.md) as html file in .navigate.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fsspath: str</span>
+<span class="sd">        Location of standardized fle system structure (FSS). This path should point to the</span>
+<span class="sd">        root of the FSS. Preferably, this is a relative path. The default of this path is &quot;.&quot;.</span>
+<span class="sd">    project: str</span>
+<span class="sd">        html version of Project file (e.g., 0_PROJECT.md)</span>
+<span class="sd">    line : str</span>
+<span class="sd">        formatted html line</span>
+<span class="sd">    title : str</span>
+<span class="sd">        Section title</span>
+<span class="sd">    navdir : str</span>
+<span class="sd">        location of .navigate directory</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        Always returns True</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">navdir</span><span class="p">,</span> <span class="s2">&quot;0_project.html&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>     <span class="c1"># write converted markdown file to html file</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+<span class="c1"># END OF FUNCTION save_project</span>
+
+
+<div class="viewcode-block" id="save_getting_started"><a class="viewcode-back" href="../Navigate.html#Navigate.save_getting_started">[docs]</a><span class="k">def</span> <span class="nf">save_getting_started</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">navdir</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;0_GETTINGSTARTED.html&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Format and save the html file that serves as a starting point for researchers who aim to reproduce the</span>
+<span class="sd">    project. It will show the most important results together with the data and/or code that was used to</span>
+<span class="sd">    produce it.</span>
+
+<span class="sd">    :param str fsspath:</span>
+<span class="sd">        Location of standardized fle system structure (FSS). This path should point to the</span>
+<span class="sd">        root of the FSS. Preferably, this is a relative path. The default of this path is &quot;.&quot;.</span>
+<span class="sd">    :param str line:</span>
+<span class="sd">        Formatted html line</span>
+<span class="sd">    :param str title:</span>
+<span class="sd">        Section title</span>
+<span class="sd">    :param str navdir:</span>
+<span class="sd">        Location of .navigate</span>
+<span class="sd">    :param str filename:</span>
+<span class="sd">        Html file contain most important aspects of project. The default filename is &#39;0_GETTING_STARTED.html&#39;.</span>
+<span class="sd">        This file should be located in the root of the FSS. This document can be prepared with any text editor</span>
+<span class="sd">        (e.g., Microsoft Word, LaTex), and subsequently converted to html. The document should contain</span>
+<span class="sd">        relative hyperlinks to the relevant subdirectories and/or files (e.g., ./ProjectDocumentation</span>
+<span class="sd">        or ./Processing/README.md).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>   <span class="c1"># read html file</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error!&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Make sure that you used utf-8 encoding for </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Format and save</span>
+    <span class="c1">#</span>
+    <span class="c1"># The resulting html file (start) will be saved in .navigate in the root</span>
+    <span class="c1"># of the FSS. Therefore, all paths presents in this file should be changed to</span>
+    <span class="c1"># be relative to the root again</span>
+
+    <span class="c1"># Get all references to markdown files</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;href=\&quot;(.*\.md)\&quot;&#39;</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">a</span><span class="p">:</span>
+        <span class="n">item_backup</span>    <span class="o">=</span> <span class="n">item</span>
+        <span class="n">item</span>           <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;%20&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>  <span class="c1"># otherwise file wil not open in md2thml</span>
+        <span class="n">mdpath</span><span class="p">,</span> <span class="n">mdfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="n">new_mdpath</span>     <span class="o">=</span> <span class="n">md2html</span><span class="p">(</span><span class="n">navdir</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">mdfile</span><span class="p">)</span>  <span class="c1"># do the conversion</span>
+        <span class="n">start</span>          <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">item_backup</span><span class="p">,</span> <span class="n">new_mdpath</span><span class="p">)</span>
+
+    <span class="c1"># Change all paths relative to the root of the FSS</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;href=</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;target=</span><span class="se">\&quot;</span><span class="s1">frame-2</span><span class="se">\&quot;</span><span class="s1"> href=</span><span class="se">\&quot;</span><span class="s1">.\..</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;src=</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">,</span>  <span class="s1">&#39;target=</span><span class="se">\&quot;</span><span class="s1">frame-2</span><span class="se">\&quot;</span><span class="s1"> src=</span><span class="se">\&quot;</span><span class="s1">.\..</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;img=</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">,</span>  <span class="s1">&#39;target=</span><span class="se">\&quot;</span><span class="s1">frame-2</span><span class="se">\&quot;</span><span class="s1"> img=</span><span class="se">\&quot;</span><span class="s1">.\..</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">navdir</span><span class="p">,</span> <span class="s2">&quot;0_gettingstarted.html&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span></div>
+<span class="c1"># END OF FUNCTION save_getting_started</span>
+
+
+<div class="viewcode-block" id="parse_repo"><a class="viewcode-back" href="../Navigate.html#Navigate.parse_repo">[docs]</a><span class="k">def</span> <span class="nf">parse_repo</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;github.txt&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to get the name of the GitHub repository corresponding to the project.</span>
+<span class="sd">    From github.txt in /Processing</span>
+<span class="sd">    The repository is identified by looking for the last line in this file that\n</span>
+<span class="sd">        -ends with .git\n</span>
+<span class="sd">        -starts with http\n</span>
+<span class="sd">        -starts with github.com\n</span>
+
+<span class="sd">    :param str fsspath: Location of standardized fle system structure (FSS). This path should point to the</span>
+<span class="sd">        root of the FSS. Preferably, this is a relative path. The default of this path is &quot;.&quot;.</span>
+<span class="sd">    :param str filename: name of file containing name of GitHub repository</span>
+<span class="sd">    :return: name of GitHub repository</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">repo</span> <span class="o">=</span> <span class="s2">&quot;No GitHub repository found&quot;</span>  <span class="c1"># default response if repository is not specified or cannot be found</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="s2">&quot;Processing&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">myline</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+    <span class="k">while</span> <span class="n">myline</span><span class="p">:</span>
+        <span class="n">myline</span> <span class="o">=</span> <span class="n">myline</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>  <span class="c1"># remove trailing spaces</span>
+        <span class="k">if</span> <span class="n">myline</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.git&#39;</span><span class="p">)</span> <span class="ow">or</span> \
+                <span class="n">myline</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">)</span> <span class="ow">or</span> \
+                <span class="n">myline</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;github.com&#39;</span><span class="p">):</span>
+            <span class="n">repo</span> <span class="o">=</span> <span class="n">myline</span>
+        <span class="n">myline</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">repo</span></div>
+<span class="c1"># END OF FUNCTION parse_repo</span>
+
+
+<div class="viewcode-block" id="read_config"><a class="viewcode-back" href="../Navigate.html#Navigate.read_config">[docs]</a><span class="k">def</span> <span class="nf">read_config</span><span class="p">(</span><span class="n">confdir</span><span class="p">,</span> <span class="n">fsspath</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;Navigation.conf&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to read and parse the configuration file</span>
+
+<span class="sd">    :param str confdir:</span>
+<span class="sd">        Location of configuration file</span>
+<span class="sd">    :param str fsspath:</span>
+<span class="sd">        Location of standardized fle system structure (FSS). This path should point to the</span>
+<span class="sd">        root of the FSS. Preferably, this is a relative path. The default of this path is &quot;.&quot;.</span>
+<span class="sd">    :param str filename:</span>
+<span class="sd">        Name of configuration file</span>
+<span class="sd">    :return: configuration settings</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">confdir</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">config</span></div>
+<span class="c1"># END OF FUNCTION read_config</span>
+
+
+<div class="viewcode-block" id="s2t"><a class="viewcode-back" href="../Navigate.html#Navigate.s2t">[docs]</a><span class="k">def</span> <span class="nf">s2t</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function splits a string (obtained from read_config) and converts in to a tuple</span>
+<span class="sd">    using the comma as a delimiter</span>
+
+<span class="sd">    :param str string: input string</span>
+<span class="sd">    :return: tuple containing the separate parts of the string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">string</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>  <span class="c1"># if string is not a single entry</span>
+        <span class="c1"># split the string using comma as a delimiter, and convert to tuple</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">string</span></div>
+<span class="c1"># END OF FUNCTION st2</span>
+
+
+<div class="viewcode-block" id="write_navigation"><a class="viewcode-back" href="../Navigate.html#Navigate.write_navigation">[docs]</a><span class="k">def</span> <span class="nf">write_navigation</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">repo</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">projecttitle</span><span class="p">,</span>
+                     <span class="n">gettingstarted</span><span class="p">,</span> <span class="n">directory_structure</span><span class="p">,</span>
+                     <span class="n">navdir</span><span class="p">,</span> <span class="n">navigatedir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write Navigation.html</span>
+
+<span class="sd">    :param str fsspath: Location of standardized fle system structure (FSS). This path should point to the</span>
+<span class="sd">        root of the FSS. Preferably, this is a relative path. The default of this path is &quot;.&quot;.</span>
+<span class="sd">    :param str repo: location of GitHub repository</span>
+<span class="sd">    :param str project: general project information</span>
+<span class="sd">    :param str projecttitle: title of project</span>
+<span class="sd">    :param str gettingstarted: information to get the user of the project started with the FSS</span>
+<span class="sd">    :param str directory_structure: structure of FSS and all files in the FSS</span>
+<span class="sd">    :param str navdir: location of .navigate directory</span>
+<span class="sd">    :param str navigatedir: location of output file (Navigate.html)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fss</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&lt;ul&gt;</span><span class="si">{</span><span class="n">directory_structure</span><span class="si">}</span><span class="s2">&lt;/ul&gt;&quot;</span>
+
+    <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>  <span class="c1"># Get date and time</span>
+
+    <span class="c1"># html stuff</span>
+    <span class="n">startHTML</span>  <span class="o">=</span> <span class="s2">&quot;&lt;html&gt;&quot;</span>
+    <span class="n">startHEAD</span>  <span class="o">=</span> <span class="s2">&quot;&lt;head&gt;&quot;</span>
+    <span class="c1"># htmltitle  = &quot;Navigation for the standardized file structure (FSS)&quot;</span>
+    <span class="c1"># htmlscript = &quot;&lt;script type=\&quot;module\&quot; src=\&quot;https://md-block.verou.me/md-block.js\&quot;&gt;&lt;/script&gt;&quot;</span>
+    <span class="n">startSTYLE</span> <span class="o">=</span> <span class="s2">&quot;&lt;style&gt;&quot;</span>
+    <span class="n">linestyle</span>  <span class="o">=</span> <span class="s2">&quot;hr.rounded {border-top: 4px solid #bbb; border-radius: 5px;}&quot;</span>  <span class="c1"># rounded border</span>
+    <span class="n">endSTYLE</span>   <span class="o">=</span> <span class="s2">&quot;&lt;/style&gt;&quot;</span>
+    <span class="n">endHEAD</span>    <span class="o">=</span> <span class="s2">&quot;&lt;/head&gt;&quot;</span>
+    <span class="n">startBODY</span>  <span class="o">=</span> <span class="s2">&quot;&lt;body&gt;&quot;</span>
+    <span class="n">endBODY</span>    <span class="o">=</span> <span class="s2">&quot;&lt;/body&gt;&quot;</span>
+    <span class="n">endHTML</span>    <span class="o">=</span> <span class="s2">&quot;&lt;/html&gt;&quot;</span>
+
+    <span class="n">line</span>      <span class="o">=</span> <span class="s2">&quot;&lt;hr class=&#39;rounded&#39;&gt;&quot;</span>
+
+    <span class="c1"># text elements</span>
+    <span class="n">pagetitle</span>    <span class="o">=</span> <span class="s2">&quot;Project: &quot;</span>
+    <span class="n">information</span>  <span class="o">=</span> <span class="s2">&quot;Project information&quot;</span>
+    <span class="n">browser</span>      <span class="o">=</span> <span class="s2">&quot;Project browser&quot;</span>
+    <span class="n">starting</span>     <span class="o">=</span> <span class="s2">&quot;Getting started&quot;</span>
+    <span class="n">repo</span>         <span class="o">=</span> <span class="s2">&quot;&lt;a href=&quot;</span> <span class="o">+</span> <span class="n">repo</span> <span class="o">+</span> <span class="s2">&quot; target=</span><span class="se">\&quot;</span><span class="s2">_blank</span><span class="se">\&quot;</span><span class="s2">&gt;&quot;</span> <span class="o">+</span> <span class="n">repo</span> <span class="o">+</span> <span class="s2">&quot;&lt;/a&gt;&quot;</span>
+    <span class="n">repo</span>         <span class="o">=</span> <span class="s2">&quot;Github repository: &quot;</span> <span class="o">+</span> <span class="n">repo</span>
+    <span class="n">Instruction1</span> <span class="o">=</span> <span class="s1">&#39;Click triangle to unfold directory. Click on file to show contents.&#39;</span>
+    <span class="n">Instruction2</span> <span class="o">=</span> <span class="s1">&#39;Note: only relevant files are shown in this browser&#39;</span>
+    <span class="n">reset</span>        <span class="o">=</span> <span class="s1">&#39;[RESET]&#39;</span>
+
+    <span class="c1"># Parse the project name out of the Project file (e.g., (0_PROJECT.md)</span>
+    <span class="c1"># Since it was converted from markdown to html, I remove the html tags</span>
+    <span class="c1"># using re.search (regular expressions).</span>
+    <span class="c1"># projectname = project.split(&#39;\n&#39;, 1)[0]                     # get the first line</span>
+    <span class="c1"># projectname = re.search(&#39;&lt;/strong&gt;(.*)&lt;/p&gt;&#39;, projectname)</span>
+    <span class="c1"># projectname = projectname.group(1)</span>
+
+    <span class="c1"># format text elements</span>
+    <span class="n">pagetitle</span>    <span class="o">=</span> <span class="s2">&quot;&lt;p style=</span><span class="se">\&quot;</span><span class="s2">color:green;font-size:25px;</span><span class="se">\&quot;</span><span class="s2">&gt; &lt;strong&gt;&quot;</span> <span class="o">+</span> <span class="n">pagetitle</span> <span class="o">+</span> <span class="n">projecttitle</span> <span class="o">+</span> <span class="s2">&quot;&lt;/strong&gt; &lt;/p&gt;&quot;</span>
+    <span class="n">information</span>  <span class="o">=</span> <span class="s2">&quot;&lt;p style=</span><span class="se">\&quot;</span><span class="s2">color:blue;font-size:20px;</span><span class="se">\&quot;</span><span class="s2">&gt;&lt;strong&gt;&quot;</span> <span class="o">+</span> <span class="n">information</span> <span class="o">+</span> <span class="s2">&quot;&lt;/strong&gt;&lt;/p&gt;&quot;</span>
+    <span class="n">starting</span>     <span class="o">=</span> <span class="s2">&quot;&lt;p style=</span><span class="se">\&quot;</span><span class="s2">color:blue;font-size:20px;</span><span class="se">\&quot;</span><span class="s2">&gt;&lt;strong&gt;&quot;</span> <span class="o">+</span> <span class="n">starting</span> <span class="o">+</span> <span class="s2">&quot;&lt;/strong&gt;&lt;/p&gt;&quot;</span>
+    <span class="n">reset</span>        <span class="o">=</span> <span class="s2">&quot;&lt;a style=</span><span class="se">\&quot;</span><span class="s2">color:red;font-size:16px;</span><span class="se">\&quot;</span><span class="s2"> target=</span><span class="se">\&quot;</span><span class="s2">_top</span><span class="se">\&quot;</span><span class="s2"> href=</span><span class="se">\&quot;</span><span class="s2">.</span><span class="se">\\</span><span class="s2">..</span><span class="se">\\</span><span class="s2">Navigate.html</span><span class="se">\&quot;</span><span class="s2">&gt;&quot;</span> <span class="o">+</span> \
+                   <span class="n">reset</span> <span class="o">+</span> <span class="s2">&quot;&lt;/a&gt;&quot;</span>
+    <span class="n">browser</span>      <span class="o">=</span> <span class="s2">&quot;&lt;p style=</span><span class="se">\&quot;</span><span class="s2">color:blue;font-size:20px;</span><span class="se">\&quot;</span><span class="s2">&gt;&lt;strong&gt;&quot;</span> <span class="o">+</span> <span class="n">browser</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">reset</span> <span class="o">+</span> <span class="s2">&quot;&lt;/strong&gt;&lt;/p&gt;&quot;</span>
+    <span class="n">DateTime</span>     <span class="o">=</span> <span class="s2">&quot;Generated on: &quot;</span> <span class="o">+</span> <span class="n">today</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%B </span><span class="si">%d</span><span class="s2">, %Y (%H:%M:%S)&quot;</span><span class="p">)</span>  <span class="c1"># Textual month, day and year</span>
+    <span class="n">repo</span>         <span class="o">=</span> <span class="s2">&quot;&lt;p style=</span><span class="se">\&quot;</span><span class="s2">color:black;font-size:16px;</span><span class="se">\&quot;</span><span class="s2">&gt;&quot;</span> <span class="o">+</span> <span class="n">repo</span> <span class="o">+</span> <span class="s2">&quot;&lt;/p&gt;&quot;</span>
+
+    <span class="c1"># Copy navigation template</span>
+    <span class="c1"># The navigation template defines four iframes in which all content will be displayed</span>
+    <span class="n">src</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">navdir</span><span class="p">,</span> <span class="s2">&quot;__navigate-template.html__&quot;</span><span class="p">)</span>
+    <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">navigatedir</span><span class="p">,</span> <span class="s2">&quot;Navigate.html&quot;</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
+
+    <span class="c1"># Copy 0_GETTINGSTARTED.pdf</span>
+    <span class="n">src</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="s2">&quot;0_GETTINGSTARTED.html&quot;</span><span class="p">)</span>
+    <span class="n">dst</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">navdir</span><span class="p">,</span> <span class="s2">&quot;0_gettingstarted.html&quot;</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
+
+    <span class="c1"># Format and save Project file (e.g., 0_PROJECT.md) as html file</span>
+    <span class="n">save_project</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">information</span><span class="p">,</span> <span class="n">navdir</span><span class="p">)</span>
+
+    <span class="c1"># Format and save Project file that contains project highlights/summary</span>
+    <span class="n">save_getting_started</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">starting</span><span class="p">,</span> <span class="n">navdir</span><span class="p">,</span> <span class="n">gettingstarted</span><span class="p">)</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># Write html page and save to file</span>
+    <span class="c1">#</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">navdir</span><span class="p">,</span> <span class="s2">&quot;fss.html&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">startHTML</span><span class="p">)</span>     <span class="c1"># html stuff</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">startHEAD</span><span class="p">)</span>     <span class="c1"># html stuff</span>
+        <span class="c1"># f.write(htmlscript)  # html stuff</span>
+        <span class="c1"># f.write(htmltitle)   # html stuff</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">startSTYLE</span><span class="p">)</span>    <span class="c1"># html stuff</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">linestyle</span><span class="p">)</span>     <span class="c1"># html stuff</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">endSTYLE</span><span class="p">)</span>      <span class="c1"># html stuff</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">endHEAD</span><span class="p">)</span>       <span class="c1"># html stuff</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">startBODY</span><span class="p">)</span>     <span class="c1"># html stuff</span>
+
+        <span class="c1"># Start the actual content</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>          <span class="c1"># html line</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pagetitle</span><span class="p">)</span>     <span class="c1"># Section title: Project Overview</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">DateTime</span><span class="p">)</span>      <span class="c1"># Date of generation</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>          <span class="c1"># html line</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">browser</span><span class="p">)</span>       <span class="c1"># Section title: Project browser</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>          <span class="c1"># html line</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">repo</span><span class="p">)</span>          <span class="c1"># Name of github repository</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">Instruction1</span><span class="p">)</span>  <span class="c1"># Line with instructions</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fss</span><span class="p">)</span>           <span class="c1"># FSS structure</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">Instruction2</span><span class="p">)</span>  <span class="c1"># Line with instructions</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>          <span class="c1"># html line</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">endBODY</span><span class="p">)</span>       <span class="c1"># html stuff</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">endHTML</span><span class="p">)</span>       <span class="c1"># html stuff</span></div>
+
+<span class="c1"># END OF FUNCTION write_navigation</span>
+
+
+<div class="viewcode-block" id="create_navigate"><a class="viewcode-back" href="../Navigate.html#Navigate.create_navigate">[docs]</a><span class="k">def</span> <span class="nf">create_navigate</span><span class="p">(</span><span class="n">fsspath</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">navdir</span><span class="o">=</span><span class="s2">&quot;.navigate&quot;</span><span class="p">,</span> <span class="n">navigatedir</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">confdir</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">conffile</span><span class="o">=</span><span class="s2">&quot;Navigation.conf&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Main function to create Navigate.html. This html file can be opened in your web-browser to</span>
+<span class="sd">    explore all the files in the project (i.e., the standardized File System Structure; FSS). Note</span>
+<span class="sd">    that specific files and/or sub-directories may have been excluded from the navigation page. This</span>
+<span class="sd">    can be configured in the Configuration file.</span>
+
+<span class="sd">    :param str fsspath: Location of standardized fle system structure (FSS). This path should point to the root of the FSS. Preferably, this is a relative path. The default of this path is &quot;.&quot;.</span>
+<span class="sd">    :param str navdir: location of .navigate</span>
+<span class="sd">    :param str navigatedir: location of output file (Navigation.html)</span>
+<span class="sd">    :param str confdir: location of configuration file</span>
+<span class="sd">    :param str conffile: name of configuration file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating Navigate.html.........&quot;</span><span class="p">)</span>
+
+    <span class="c1"># remove all files (except template) from .navigate</span>
+    <span class="n">clean_navigate</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">navdir</span><span class="p">)</span>
+
+    <span class="c1"># Read and parse configuration file</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span><span class="n">confdir</span><span class="p">,</span> <span class="n">fsspath</span><span class="o">=</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">conffile</span><span class="p">)</span>
+
+    <span class="n">projectTitle</span>       <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;GENERAL&#39;</span><span class="p">][</span><span class="s1">&#39;ProjectTitle&#39;</span><span class="p">]</span>
+
+    <span class="n">showAll</span>            <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONTENT&#39;</span><span class="p">][</span><span class="s1">&#39;ShowAll&#39;</span><span class="p">])</span>
+
+    <span class="n">ProjectFile</span>        <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE.CONTENT&#39;</span><span class="p">][</span><span class="s1">&#39;ProjectFile&#39;</span><span class="p">]</span>
+    <span class="n">GettingStartedFile</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE.CONTENT&#39;</span><span class="p">][</span><span class="s1">&#39;GettingStartedFile&#39;</span><span class="p">]</span>
+
+    <span class="c1"># config returns a single string that may contain multiple entries. These</span>
+    <span class="c1"># are split and stored in a tuple using the function s2t</span>
+    <span class="n">filesHelp</span>          <span class="o">=</span> <span class="n">s2t</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILES.INCLUDE.EXCLUDE&#39;</span><span class="p">][</span><span class="s1">&#39;filesHELP&#39;</span><span class="p">])</span>
+    <span class="n">fileTypes</span>          <span class="o">=</span> <span class="n">s2t</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILES.INCLUDE.EXCLUDE&#39;</span><span class="p">][</span><span class="s1">&#39;fileTypes&#39;</span><span class="p">])</span>
+    <span class="n">fileTypesExclude</span>   <span class="o">=</span> <span class="n">s2t</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILES.INCLUDE.EXCLUDE&#39;</span><span class="p">][</span><span class="s1">&#39;fileTypesExclude&#39;</span><span class="p">])</span>
+    <span class="n">filesExclude</span>       <span class="o">=</span> <span class="n">s2t</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILES.INCLUDE.EXCLUDE&#39;</span><span class="p">][</span><span class="s1">&#39;filesExclude&#39;</span><span class="p">])</span>
+    <span class="n">filesInclude</span>       <span class="o">=</span> <span class="n">s2t</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILES.INCLUDE.EXCLUDE&#39;</span><span class="p">][</span><span class="s1">&#39;filesInclude&#39;</span><span class="p">])</span>
+
+    <span class="n">directoryExclude</span>   <span class="o">=</span> <span class="n">s2t</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;DIR.INCLUDE.EXCLUDE&#39;</span><span class="p">][</span><span class="s1">&#39;directoryExclude&#39;</span><span class="p">])</span>
+    <span class="c1"># end configuration</span>
+
+    <span class="c1"># Parse Project file from markdown to html. This file will be printed in the bottom-left</span>
+    <span class="c1"># frame of the predefined html page (Navigation.html) in the final output.</span>
+    <span class="n">Project</span> <span class="o">=</span> <span class="n">parse_project</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">ProjectFile</span><span class="p">)</span>
+
+    <span class="c1"># Get the name of the GitHub repository</span>
+    <span class="n">Repo</span> <span class="o">=</span> <span class="n">parse_repo</span><span class="p">(</span><span class="n">fsspath</span><span class="p">)</span>
+
+    <span class="c1"># Generate the directory structure</span>
+    <span class="n">directory_structure</span> <span class="o">=</span> <span class="n">create_directory_structure</span><span class="p">(</span><span class="n">itempath</span><span class="o">=</span><span class="n">fsspath</span><span class="p">,</span>
+                                                     <span class="n">fsspath</span><span class="o">=</span><span class="n">fsspath</span><span class="p">,</span>
+                                                     <span class="n">navdir</span><span class="o">=</span><span class="n">navdir</span><span class="p">,</span>
+                                                     <span class="n">showall</span><span class="o">=</span><span class="n">showAll</span><span class="p">,</span>
+                                                     <span class="n">filetypes</span><span class="o">=</span><span class="n">fileTypes</span><span class="p">,</span>
+                                                     <span class="n">filesexclude</span><span class="o">=</span><span class="n">filesExclude</span><span class="p">,</span>
+                                                     <span class="n">filesinclude</span><span class="o">=</span><span class="n">filesInclude</span><span class="p">,</span>
+                                                     <span class="n">fileshelp</span><span class="o">=</span><span class="n">filesHelp</span><span class="p">,</span>
+                                                     <span class="n">filetypesexclude</span><span class="o">=</span><span class="n">fileTypesExclude</span><span class="p">,</span>
+                                                     <span class="n">direxclude</span><span class="o">=</span><span class="n">directoryExclude</span><span class="p">)</span>
+
+    <span class="n">write_navigation</span><span class="p">(</span><span class="n">fsspath</span><span class="p">,</span> <span class="n">Repo</span><span class="p">,</span> <span class="n">Project</span><span class="p">,</span> <span class="n">projectTitle</span><span class="p">,</span>
+                     <span class="n">GettingStartedFile</span><span class="p">,</span> <span class="n">directory_structure</span><span class="p">,</span>
+                     <span class="n">navdir</span><span class="p">,</span> <span class="n">navigatedir</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Navigate.html is now available at the specified location&quot;</span><span class="p">)</span></div>
+<span class="c1"># END OF FUNCTION create_navigate</span>
+
+
+<span class="c1">###############################################</span>
+<span class="c1"># EXECUTE MAIN FUNCTION TO MAKE NAVIGATION.HTML</span>
+<span class="c1">###############################################</span>
+
+<span class="c1"># The next construct allows to directly execute the function from the command line or</span>
+<span class="c1"># to import it as a module.</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">ArgumentDefaultsHelpFormatter</span>
+
+    <span class="c1"># Parse command line arguments</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;--fsspath&quot;</span><span class="p">,</span>     <span class="n">default</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Root of standardized FSS&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="s2">&quot;--navdir&quot;</span><span class="p">,</span>      <span class="n">default</span><span class="o">=</span><span class="s2">&quot;.navigate&quot;</span><span class="p">,</span>       <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Location of .navigate&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-N&quot;</span><span class="p">,</span> <span class="s2">&quot;--navigatedir&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Location of output file (Navigate.html&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="s2">&quot;--confdir&quot;</span><span class="p">,</span>     <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Location of configuration file&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-C&quot;</span><span class="p">,</span> <span class="s2">&quot;--conffile&quot;</span><span class="p">,</span>    <span class="n">default</span><span class="o">=</span><span class="s2">&quot;Navigation.conf&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of configuration file&quot;</span><span class="p">)</span>
+
+    <span class="c1"># The next three arguments are added to prevent an error when running in JetBrains DataSpell/PyCharm</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--mode&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;client&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Neglect. Only to enable execution from DataSpell/PyCharm&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--host&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Neglect. Only to enable execution from DataSpell/PyCharm&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--port&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">52162</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Neglect. Only to enable execution from DataSpell/PyCharm&quot;</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">())</span>
+
+    <span class="n">create_navigate</span><span class="p">(</span><span class="n">fsspath</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;fsspath&quot;</span><span class="p">],</span>
+                    <span class="n">navdir</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;navdir&quot;</span><span class="p">],</span>
+                    <span class="n">navigatedir</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;navigatedir&quot;</span><span class="p">],</span>
+                    <span class="n">confdir</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;confdir&quot;</span><span class="p">],</span>
+                    <span class="n">conffile</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;conffile&quot;</span><span class="p">])</span>
+
+<span class="c1">#%%</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Antoine van Kampen, Aldo Jongejan, Utkarsh Mahamune.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

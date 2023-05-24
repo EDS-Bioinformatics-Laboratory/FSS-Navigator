@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Navigate module &mdash; FSS Navigator 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> FSS Navigator
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Navigate module</a><ul>
+<li><a class="reference internal" href="#program">Program</a></li>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#authors">Authors</a></li>
+<li><a class="reference internal" href="#function-call">Function call</a></li>
+<li><a class="reference internal" href="#command-line">Command line</a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">FSS Navigator</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Navigate module</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Navigate">
+<span id="navigate-module"></span><h1>Navigate module<a class="headerlink" href="#module-Navigate" title="Permalink to this heading"></a></h1>
+<section id="program">
+<h2>Program<a class="headerlink" href="#program" title="Permalink to this heading"></a></h2>
+<p>Navigate.py (9 May 2023)</p>
+</section>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h2>
+<p>Show the standardized File System Structure (FSS) of a project in a html file to allow easy navigation.
+This software is to be used as part of ENCORE, the approach to improve the reproducibility of
+computational projects.</p>
+</section>
+<section id="authors">
+<h2>Authors<a class="headerlink" href="#authors" title="Permalink to this heading"></a></h2>
+<p>Antoine van Kampen, Aldo Jongejan, Utkarsh Mahamune</p>
+<p>Bioinformatics Laboratory, Amsterdam UMC, the Netherlands</p>
+<p><a class="reference external" href="https://www.bioinformaticslaboratory.eu">https://www.bioinformaticslaboratory.eu</a></p>
+</section>
+<section id="function-call">
+<h2>Function call<a class="headerlink" href="#function-call" title="Permalink to this heading"></a></h2>
+<p>create_navigate(…..)</p>
+</section>
+<section id="command-line">
+<h2>Command line<a class="headerlink" href="#command-line" title="Permalink to this heading"></a></h2>
+<p>Navigate.py -h</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="Navigate.clean_navigate">
+<span class="sig-prename descclassname"><span class="pre">Navigate.</span></span><span class="sig-name descname"><span class="pre">clean_navigate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fsspath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">navdir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Navigate.html#clean_navigate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Navigate.clean_navigate" title="Permalink to this definition"></a></dt>
+<dd><p>This function removes all files except navigate-template.html from the .navigate directory prior to
+making a new Navigation.html.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fsspath</strong> (<em>str</em>) – Location of standardized fle system structure (FSS). This path should point to the root
+of the FSS. Preferably, this is a relative path. The default of this path is “.” .</p></li>
+<li><p><strong>navdir</strong> (<em>str</em>) – location of the .navigate directory</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Navigate.create_directory_structure">
+<span class="sig-prename descclassname"><span class="pre">Navigate.</span></span><span class="sig-name descname"><span class="pre">create_directory_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">itempath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fsspath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">navdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showall</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filetypes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filesexclude</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filesinclude</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filetypesexclude</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direxclude</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileshelp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Navigate.html#create_directory_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Navigate.create_directory_structure" title="Permalink to this definition"></a></dt>
+<dd><p>This function takes arguments to include/exclude files, filetypes, and subdirectories.
+Note: ‘filetypes’ determines the filetypes to be included. This would make ‘filetypesexclude’ unnecessary.
+However, here we have the situation that we would like to include .txt files but to exclude ‘*-template.txt’
+files, which can now be specified in the filetypesexclude argument.
+Alternatively, we could have listed all the individual template files in the filesexclude tuple.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>itempath</strong> (<em>str</em>) – Intially location of FSS (FSSPath) but is updated during the recursion of this function</p></li>
+<li><p><strong>fsspath</strong> (<em>str</em>) – Location of standardized fle system structure (FSS). This path should point to the
+root of the FSS. Preferably, this is a relative path. The default of this path is “.”.</p></li>
+<li><p><strong>navdir</strong> (<em>str</em>) – Location of navigation directory (.navigate)</p></li>
+<li><p><strong>showall</strong> (<em>int</em>) – if showall = 1 then show all subdirectories and all files includes/excludes are neglected</p></li>
+<li><p><strong>filetypes</strong> (<em>str</em>) – filetypes to include in the directory tree</p></li>
+<li><p><strong>filesexclude</strong> (<em>str</em>) – files to exclude from the directory tree</p></li>
+<li><p><strong>filesinclude</strong> (<em>str</em>) – files to include in the directory tree</p></li>
+<li><p><strong>filetypesexclude</strong> (<em>str</em>) – file types to exclude from the directory tree</p></li>
+<li><p><strong>direxclude</strong> (<em>str</em>) – directories to exclude from the directory tree</p></li>
+<li><p><strong>fileshelp</strong> (<em>str</em>) – help files to exclude from the directory tree</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Directory hierarchy of the standardized file system structure (FSS) with hyperlinked files</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Navigate.create_navigate">
+<span class="sig-prename descclassname"><span class="pre">Navigate.</span></span><span class="sig-name descname"><span class="pre">create_navigate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fsspath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">navdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.navigate'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">navigatedir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conffile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Navigation.conf'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Navigate.html#create_navigate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Navigate.create_navigate" title="Permalink to this definition"></a></dt>
+<dd><p>Main function to create Navigate.html. This html file can be opened in your web-browser to
+explore all the files in the project (i.e., the standardized File System Structure; FSS). Note
+that specific files and/or sub-directories may have been excluded from the navigation page. This
+can be configured in the Configuration file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fsspath</strong> (<em>str</em>) – Location of standardized fle system structure (FSS). This path should point to the root of the FSS. Preferably, this is a relative path. The default of this path is “.”.</p></li>
+<li><p><strong>navdir</strong> (<em>str</em>) – location of .navigate</p></li>
+<li><p><strong>navigatedir</strong> (<em>str</em>) – location of output file (Navigation.html)</p></li>
+<li><p><strong>confdir</strong> (<em>str</em>) – location of configuration file</p></li>
+<li><p><strong>conffile</strong> (<em>str</em>) – name of configuration file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Navigate.get_random_string">
+<span class="sig-prename descclassname"><span class="pre">Navigate.</span></span><span class="sig-name descname"><span class="pre">get_random_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Navigate.html#get_random_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Navigate.get_random_string" title="Permalink to this definition"></a></dt>
+<dd><p>Generate random string from lower-case letters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>length</strong> (<em>int</em>) – Length of string</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>random string of specified length</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Navigate.md2html">
+<span class="sig-prename descclassname"><span class="pre">Navigate.</span></span><span class="sig-name descname"><span class="pre">md2html</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">navdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">itempath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Navigate.html#md2html"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Navigate.md2html" title="Permalink to this definition"></a></dt>
+<dd><p>Convert markdown file (.md) to html (.html) file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>navdir</strong> (<em>str</em>) – location of .navigate directory</p></li>
+<li><p><strong>itempath</strong> (<em>str</em>) – location of markdown file</p></li>
+<li><p><strong>item</strong> (<em>str</em>) – markdown file to be converted</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Link to html file in .navigate</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Navigate.parse_project">
+<span class="sig-prename descclassname"><span class="pre">Navigate.</span></span><span class="sig-name descname"><span class="pre">parse_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fsspath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Navigate.html#parse_project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Navigate.parse_project" title="Permalink to this definition"></a></dt>
+<dd><p>Function to parse the Project file (0_PROJECT.md) and convert to HTML. This file contains
+the general project information and should be displayed together with the project organization
+(i.e., the FSS). The converted markdown file is also saved as a html file in .navigate to be displayed
+in the project navigation window.</p>
+<p>The Project file is should be located in the root of the FSS</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fsspath</strong> (<em>str</em>) – Location of standardized fle system structure (FSS). This path should point to the
+root of the FSS. Preferably, this is a relative path. The default of this path is “.”.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – file name of markdown file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>html version of the project description</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Navigate.parse_repo">
+<span class="sig-prename descclassname"><span class="pre">Navigate.</span></span><span class="sig-name descname"><span class="pre">parse_repo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fsspath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'github.txt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Navigate.html#parse_repo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Navigate.parse_repo" title="Permalink to this definition"></a></dt>
+<dd><p>Function to get the name of the GitHub repository corresponding to the project.
+From github.txt in /Processing
+The repository is identified by looking for the last line in this file that</p>
+<blockquote>
+<div><p>-ends with .git</p>
+<p>-starts with http</p>
+<p>-starts with github.com</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fsspath</strong> (<em>str</em>) – Location of standardized fle system structure (FSS). This path should point to the
+root of the FSS. Preferably, this is a relative path. The default of this path is “.”.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – name of file containing name of GitHub repository</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>name of GitHub repository</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Navigate.read_config">
+<span class="sig-prename descclassname"><span class="pre">Navigate.</span></span><span class="sig-name descname"><span class="pre">read_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">confdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fsspath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Navigation.conf'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Navigate.html#read_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Navigate.read_config" title="Permalink to this definition"></a></dt>
+<dd><p>Function to read and parse the configuration file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>confdir</strong> (<em>str</em>) – Location of configuration file</p></li>
+<li><p><strong>fsspath</strong> (<em>str</em>) – Location of standardized fle system structure (FSS). This path should point to the
+root of the FSS. Preferably, this is a relative path. The default of this path is “.”.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – Name of configuration file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>configuration settings</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Navigate.s2t">
+<span class="sig-prename descclassname"><span class="pre">Navigate.</span></span><span class="sig-name descname"><span class="pre">s2t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Navigate.html#s2t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Navigate.s2t" title="Permalink to this definition"></a></dt>
+<dd><p>This function splits a string (obtained from read_config) and converts in to a tuple
+using the comma as a delimiter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>string</strong> (<em>str</em>) – input string</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple containing the separate parts of the string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Navigate.save_getting_started">
+<span class="sig-prename descclassname"><span class="pre">Navigate.</span></span><span class="sig-name descname"><span class="pre">save_getting_started</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fsspath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">navdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0_GETTINGSTARTED.html'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Navigate.html#save_getting_started"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Navigate.save_getting_started" title="Permalink to this definition"></a></dt>
+<dd><p>Format and save the html file that serves as a starting point for researchers who aim to reproduce the
+project. It will show the most important results together with the data and/or code that was used to
+produce it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fsspath</strong> (<em>str</em>) – Location of standardized fle system structure (FSS). This path should point to the
+root of the FSS. Preferably, this is a relative path. The default of this path is “.”.</p></li>
+<li><p><strong>line</strong> (<em>str</em>) – Formatted html line</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Section title</p></li>
+<li><p><strong>navdir</strong> (<em>str</em>) – Location of .navigate</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – Html file contain most important aspects of project. The default filename is ‘0_GETTING_STARTED.html’.
+This file should be located in the root of the FSS. This document can be prepared with any text editor
+(e.g., Microsoft Word, LaTex), and subsequently converted to html. The document should contain
+relative hyperlinks to the relevant subdirectories and/or files (e.g., ./ProjectDocumentation
+or ./Processing/README.md).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Navigate.save_project">
+<span class="sig-prename descclassname"><span class="pre">Navigate.</span></span><span class="sig-name descname"><span class="pre">save_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fsspath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">navdir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Navigate.html#save_project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Navigate.save_project" title="Permalink to this definition"></a></dt>
+<dd><p>Format and save Project file (e.g., 0_PROJECT.md) as html file in .navigate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fsspath</strong> (<em>str</em>) – Location of standardized fle system structure (FSS). This path should point to the
+root of the FSS. Preferably, this is a relative path. The default of this path is “.”.</p></li>
+<li><p><strong>project</strong> (<em>str</em>) – html version of Project file (e.g., 0_PROJECT.md)</p></li>
+<li><p><strong>line</strong> (<em>str</em>) – formatted html line</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Section title</p></li>
+<li><p><strong>navdir</strong> (<em>str</em>) – location of .navigate directory</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Always returns True</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Navigate.write_navigation">
+<span class="sig-prename descclassname"><span class="pre">Navigate.</span></span><span class="sig-name descname"><span class="pre">write_navigation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fsspath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">projecttitle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gettingstarted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_structure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">navdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">navigatedir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Navigate.html#write_navigation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Navigate.write_navigation" title="Permalink to this definition"></a></dt>
+<dd><p>Write Navigation.html</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fsspath</strong> (<em>str</em>) – Location of standardized fle system structure (FSS). This path should point to the
+root of the FSS. Preferably, this is a relative path. The default of this path is “.”.</p></li>
+<li><p><strong>repo</strong> (<em>str</em>) – location of GitHub repository</p></li>
+<li><p><strong>project</strong> (<em>str</em>) – general project information</p></li>
+<li><p><strong>projecttitle</strong> (<em>str</em>) – title of project</p></li>
+<li><p><strong>gettingstarted</strong> (<em>str</em>) – information to get the user of the project started with the FSS</p></li>
+<li><p><strong>directory_structure</strong> (<em>str</em>) – structure of FSS and all files in the FSS</p></li>
+<li><p><strong>navdir</strong> (<em>str</em>) – location of .navigate directory</p></li>
+<li><p><strong>navigatedir</strong> (<em>str</em>) – location of output file (Navigate.html)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Antoine van Kampen, Aldo Jongejan, Utkarsh Mahamune.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
