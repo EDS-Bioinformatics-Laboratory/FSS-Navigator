@@ -15,7 +15,6 @@ This Python script is part of **ENCORE** (Enhancing Computational Research) to n
 **Last update**: 23 May 2023  
 **Developed by:** Prof. dr. Antoine van Kampen, Dr. Aldo Jongejan, Utkarsh Mahamune (www.bioinformaticslaboratory.eu)  
 **Operating System(s) / version(s) used during development:** Windows 11  
-**Language**: Python 3  
 **Tested:** on Unix, MacOS and Windows  
 **Specific hardware requirements:** None. .  
 **Software environment:** Python 3 / Anaconda      
@@ -142,14 +141,14 @@ Requires installation of pyinstaller and pywin32:
 
 To compile:
 
-\> pyinstaller --onefile Navigate.py
+\> pyinstaller --onefile --add-binary "c:\path\to\python39.dll;." Navigate.py
 
 
 
 <u>Notes:</u>
 
 * If Navigate.py is in a Dropbox folder then first stop syncing before compilation. Otherwise the program will not compile. 
-* The compilation process will make a 'build' and 'dist' directory in the root of the FSS. The 'dist' directory contains the executable program (Navigate.exe) that should be copied to the root of the FSS. The 'build' and 'dist' directories can be removed.
+* The compilation process will make a 'build' and 'dist' directory in the root of the FSS. The 'dist' directory contains the executable program (Navigate.exe) that should be copied to the root of the FSS. The 'build' and 'dist' directories can be removed. In addition, you can remove the *.spec file.
 * Note that the executable might be blocked by Windows defender or other anti-virus software. Not sure how to solve this. See also, for example, https://stackoverflow.com/questions/43777106/program-made-with-pyinstaller-now-seen-as-a-trojan-horse-by-avg
 
 
@@ -158,7 +157,7 @@ To compile:
 
 If Python 3 is installed on your Unix/Linux computer, then the easiest way (without compilation) is to
 
-* Add **#!/[path/to/python]** at the start of your script (**#!/usr/bin/python3 on Ukkepuk**). 
+* Add **#!/usr/bin/env python3** at the start of your script. This might be different on your Unix system (e.g., **#!/usr/bin/python)**. 
 * Change the name from Navigate.py to Navigate
 * Make the script executable from the command line: chmod +x ./Navigate
 
