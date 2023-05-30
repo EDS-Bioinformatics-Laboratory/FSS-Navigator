@@ -19,7 +19,11 @@ This Python script is part of **ENCORE** (Enhancing Computational Research) to n
 **Specific hardware requirements:** None. .  
 **Software environment:** Python 3 / Anaconda      
 
-   
+
+
+DOI: https://doi.org/10.5281/zenodo.7985655
+
+Zenodo: https://zenodo.org/record/7985655  
 
 
 
