@@ -54,7 +54,7 @@ Thumpbs.db
 *.com
 *.class
 *.dll
-#*.exe
+*.exe
 *.o
 *.so
 
@@ -99,7 +99,7 @@ Thumpbs.db
 ##
 Data/*
 #**/Results/*
-#**/bin/*
+**/bin/*
 **/Code/_OLD
 
 ##
