@@ -170,9 +170,15 @@ Now you can execute the script
 
 
 
-**Mac**
+**MacOS**
 
-The Unix/Linus recipee should probably also work on Mac.
+Compile:
+
+\>pyinstaller --onefile Navigate.py
+
+or for MacIntel
+
+\>pyinstaller --onefile --windowed Navigate.py
 
 
 

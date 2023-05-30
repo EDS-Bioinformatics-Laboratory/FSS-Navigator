@@ -113,8 +113,6 @@ Data/*
 # See https://riptutorial.com/git/example/911/exceptions-in-a--gitignore-file
 # See https://stackoverflow.com/questions/987142/make-gitignore-ignore-everything-except-a-few-files
 ##
-##/20230508_ParseDirectory/CodeDocumentation/**
-!/20230508_ParseDirectory/CodeDocumentation/*.png   #include all Sphinx documentation
 
 #
 # Python .gitignore
