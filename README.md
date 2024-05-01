@@ -29,6 +29,20 @@ Zenodo: https://zenodo.org/record/7985655
 
 ------
 
+**VERSIONS**
+
+* Version 1.0 (9 May 2023) - Compatible with ENCORE Template Version 3.x
+
+* Version 1.5 (23 May 2023) - Compatible with ENCORE Template Version 3.x and 4.x
+
+Note: updates of the sFSS navigator can be obtained from the https://github.com/EDS-Bioinformatics-Laboratory/FSS-Navigator/releases
+
+------
+
+
+
+------
+
 **FILES AND DIRECTORIES**
 
 ------
