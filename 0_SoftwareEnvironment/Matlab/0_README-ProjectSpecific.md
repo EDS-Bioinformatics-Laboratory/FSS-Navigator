@@ -1,6 +1,0 @@
-# Matlab
-
-
-
-**Project specific information**
-
