@@ -8,6 +8,18 @@ Date: 29 July 2023
 
 
 
+> [!WARNING]
+>
+> 1 August 2024. GitHub detected a security issue with setuptools 69.5.1 in requirements.txt:
+>
+> A vulnerability in the `package_index` module of pypa/setuptools versions up to 69.1.1 allows for remote code execution via its download functions. These functions, which are used to download packages from URLs provided by users or retrieved from package index servers, are susceptible to code injection. If these functions are exposed to user-controlled inputs, such as package URLs, they can execute arbitrary commands on the system. The issue is fixed in version 70.0.
+>
+> This issue was fixed on GitHub using 'dependabot'. 
+>
+> However, the requirements.yml file still contains a reference to setuptools 69.5.1 since at this moment this cannot be updated with conda since version 70.0.0 is not available from the conda channel. This will be fixed as soon as possible.
+
+
+
 **CONTENT**
 
 * **Anaconda**: general information about Anaconda/Conda
